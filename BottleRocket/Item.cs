@@ -1,0 +1,125 @@
+﻿using System;
+using System.Collections;
+using System.IO;
+using System.Text;
+
+namespace BottleRocket
+{
+    public class Item
+    {
+        public const int START_OFFSET = 0x1810;
+        public const int END_OFFSET = 0x1C0F;
+        public const int TABLE_SIZE = 4; //TODO: Figure out what the actual size of the item data is
+
+        public int NameTextOffset { get; set; }
+
+        public bool NintenUsable { get; set; } //Second half   000X
+        public bool AnaUsable { get; set; }    //Second half   00X0
+        public bool LloydUsable { get; set; }  //Second half   0X00
+        public bool TeddyUsable { get; set; }  //Second half   X000
+
+        public bool Unknown1 { get; set; }     //First half    000X
+        public bool Unknown2 { get; set; }     //First half    00X0
+        public bool Edible { get; set; }       //First half    0X00
+        public bool Permanent { get; set; }    //First half    X000
+
+        public byte WeaponStrength { get; set; }
+        public byte EffectOutsideOfBattle { get; set; }
+        public byte EffectInBattle { get; set; }
+        public int Price { get; set; }
+
+        public byte[] GenerateTableEntry()
+        {
+                byte[] result = new byte[8];
+
+                byte[] namePointerBytes = HexHelpers.HexStringToByteArray(HexHelpers.Swap((NameTextOffset + 0x7FF0).ToString("X4")));
+
+                //5A
+
+                byte digit2 = Convert.ToByte(
+                HexHelpers.InterpretBoolsAsBinary(new bool[]
+                {   //3
+                    Permanent,     //0
+                    Edible,        //0
+                    Unknown2,      //1
+                    Unknown1,      //1
+
+                    //F
+                    TeddyUsable,   //1
+                    LloydUsable,   //1
+                    AnaUsable,     //1
+                    NintenUsable   //1
+
+                    //...results in 0x3F
+                }));
+
+                byte[] priceBytes = HexHelpers.HexStringToByteArray(HexHelpers.Swap(Price.ToString("X4")));
+
+                result[0] = namePointerBytes[0];
+                result[1] = namePointerBytes[1];
+                result[2] = digit2;
+                result[3] = WeaponStrength; //originally I was using Convert.ToByte for [3], [4], and [5], but they seem to work without it
+                result[4] = EffectOutsideOfBattle;
+                result[5] = EffectInBattle;
+                result[6] = priceBytes[0];
+                result[7] = priceBytes[1];
+
+                return result;
+        }
+
+        public static Item ParseHex(byte[] input)
+        {
+            if (input.Length != 8)
+                throw new ArgumentException("This pointer table entry isn't eight hex codes long...");
+
+            var result = new Item();
+
+            var namePointerTemp = input[1].ToString("X2") + input[0].ToString("X2"); //for example, 4A80. we can swap it here so it's 804A
+            result.NameTextOffset = HexHelpers.HexStringToInt(namePointerTemp) - 0x7FF0; //subtract the magic NES number to get the proper ROM offset: 5A
+
+            var itemProperties = HexHelpers.IntToBinaryString(input[2]); //get the one with all of the boolean values in it
+            itemProperties = HexHelpers.Pad(itemProperties, 8); //pad the thing with zeroes so all of the properties can be set
+
+            //set properties based on the 1s and 0s
+            result.Permanent = GetProperty(itemProperties, 0);
+            result.Edible = GetProperty(itemProperties, 1);
+            result.Unknown2 = GetProperty(itemProperties, 2);
+            result.Unknown1 = GetProperty(itemProperties, 3);
+            result.TeddyUsable = GetProperty(itemProperties, 4);
+            result.LloydUsable = GetProperty(itemProperties, 5);
+            result.AnaUsable = GetProperty(itemProperties, 6);
+            result.NintenUsable = GetProperty(itemProperties, 7);
+
+            result.WeaponStrength = input[3];
+            result.EffectOutsideOfBattle = input[4];
+            result.EffectInBattle = input[5];
+
+            var priceTemp = input[7].ToString("X2") + input[6].ToString("X2"); //the price is stored swapped, with no extra math applied to it! We can just swap the numbers like so.
+            result.Price = HexHelpers.HexStringToInt(priceTemp);
+
+            return result;
+        }
+
+        //public static void ExportYml(Item[] items)
+        //{
+
+        //    var serializer = new Serializer();
+            
+        //    //aw beans
+
+        //    //Save the item data
+        //    using (var writer = new StreamWriter(@"item_configuration_table.yml"))
+        //    {
+                
+        //    }
+        //}
+
+        //loadYML
+        //?????
+
+        private static bool GetProperty(string input, int position)
+        {
+            return input.Substring(position, 1) == "1"; //return true for 1 and false for 0. Thanks for the simplification, ReSharper
+        }
+    }
+}

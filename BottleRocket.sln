@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackinTests2", "HackinTests2\HackinTests2.csproj", "{FAEEA6D1-38D7-43F9-AB09-01485070AFD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BottleRocket", "BottleRocket\BottleRocket.csproj", "{1306BC10-3ED7-4B59-82D1-6D65EF5CCC6D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FAEEA6D1-38D7-43F9-AB09-01485070AFD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAEEA6D1-38D7-43F9-AB09-01485070AFD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAEEA6D1-38D7-43F9-AB09-01485070AFD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAEEA6D1-38D7-43F9-AB09-01485070AFD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1306BC10-3ED7-4B59-82D1-6D65EF5CCC6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1306BC10-3ED7-4B59-82D1-6D65EF5CCC6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1306BC10-3ED7-4B59-82D1-6D65EF5CCC6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1306BC10-3ED7-4B59-82D1-6D65EF5CCC6D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53B95BA3-D938-4EA4-9D78-B3E2FC210B09}
+	EndGlobalSection
+EndGlobal
