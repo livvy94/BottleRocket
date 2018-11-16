@@ -18,22 +18,14 @@ namespace BottleRocket
             InitializeComponent();
         }
 
-        private void Form1_DragDrop(object sender, DragEventArgs e)
+        private void LoadROM(FileInfo file)
         {
-            //https://support.microsoft.com/en-us/help/307966/how-to-provide-file-drag-and-drop-functionality-in-a-visual-c-applicat
+            MessageBox.Show("this probably doesn't work yet");
+            if (!HexHelpers.Validate(file.DirectoryName)) return;
 
-            var s = (string[]) e.Data.GetData(DataFormats.FileDrop, false);
-            var filepath = s[0];
-
-            LoadROM(new FileInfo(filepath));
-        }
-
-        private void Form1_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-                e.Effect = DragDropEffects.All;
-            else
-                e.Effect = DragDropEffects.None;
+            HexHelpers.LoadInfo(file.DirectoryName);
+            label2.Text = file.DirectoryName;
+            Text = file.Name;
         }
 
         private void lblFilepath_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -48,18 +40,22 @@ namespace BottleRocket
             if (dialog.ShowDialog() != DialogResult.OK) return;
             LoadROM(new FileInfo(dialog.SafeFileName));
         }
-
-        private void LoadROM(FileInfo file)
+        
+        private void Form1_DragDrop(object sender, DragEventArgs e)
         {
-            MessageBox.Show("this probably doesn't work yet");
-            if (!HexHelpers.Validate(file.DirectoryName)) return;
+            //https://support.microsoft.com/en-us/help/307966/how-to-provide-file-drag-and-drop-functionality-in-a-visual-c-applicat
+            var s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            var filepath = s[0];
 
-            HexHelpers.LoadInfo(file.DirectoryName);
-            label2.Text = file.DirectoryName;
-            Text = file.Name;
+            LoadROM(new FileInfo(filepath));
         }
 
-        //TODO: Use JSON instead of YML
+        private void Form1_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.All : DragDropEffects.None;
+        }
+
+        //TODO: Use JSON instead of YML. Also, move stuff out of button click events and into classes
         //private void btnCreateItemYML_Click(object sender, EventArgs e)
         //{
         //    if (!HexHelpers.ROMisLoaded()) return;

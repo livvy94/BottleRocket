@@ -79,7 +79,7 @@
             this.btnApplyItemYML.Name = "btnApplyItemYML";
             this.btnApplyItemYML.Size = new System.Drawing.Size(158, 23);
             this.btnApplyItemYML.TabIndex = 0;
-            this.btnApplyItemYML.Text = "Apply YML to ROM";
+            this.btnApplyItemYML.Text = "Import data to ROM";
             this.btnApplyItemYML.UseVisualStyleBackColor = true;
             // 
             // btnCreateItemYML
@@ -88,7 +88,7 @@
             this.btnCreateItemYML.Name = "btnCreateItemYML";
             this.btnCreateItemYML.Size = new System.Drawing.Size(158, 23);
             this.btnCreateItemYML.TabIndex = 0;
-            this.btnCreateItemYML.Text = "Create YML from ROM";
+            this.btnCreateItemYML.Text = "Export data from ROM";
             this.btnCreateItemYML.UseVisualStyleBackColor = true;
             // 
             // tabTeleport
