@@ -44,6 +44,7 @@ namespace BottleRocket
             {
                 writer.Write(json);
             }
+            MessageBox.Show($"Finished writing {ITEM_JSON_PATH}");
         }
 
         public static Item[] LoadItemDataFromROM()
@@ -87,10 +88,14 @@ namespace BottleRocket
                 pointerTable.AddRange(item.GenerateTableEntry());
             }
 
-            //https://stackoverflow.com/questions/3217732/how-to-edit-a-binary-files-hex-value-using-c-sharp
+            //http://www.java2s.com/Tutorials/CSharp/System.IO/BinaryWriter/C_BinaryWriter_Write_Byte_Array.htm
             using (var stream = new FileStream(ROMpath, FileMode.Open, FileAccess.Write))
             {
-                stream.Write(pointerTable.ToArray(), Item.START_OFFSET, pointerTable.Count);
+                using (var romWriter = new BinaryWriter(stream))
+                {
+                    romWriter.Seek(Item.START_OFFSET, SeekOrigin.Begin);
+                    romWriter.Write(pointerTable.ToArray());
+                }
             }
             
             MessageBox.Show(FINISHED);
