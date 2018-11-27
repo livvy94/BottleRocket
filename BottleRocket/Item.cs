@@ -10,13 +10,13 @@ namespace BottleRocket
         public const int END_OFFSET = 0x1C10; //the last byte of the last entry is 1C0F
         public const int TABLE_SIZE = END_OFFSET - START_OFFSET; //Is this ever going to be used?
         public const int NUMBER_OF_ENTRIES = 128; //There are 128 items in the table, though quite a few of them are dummied out
-        
+
         //In the future, something cool to do would be to make it not dependent on there being the same number of entries,
         //and make it so that you can change the order, and it affects references to item numbers throughout the map data/rest of the ROM
         //to let people "refactor" item usage and shuffle them around.
         //Though now that just sounds like a pipe dream that might not even be worth it lmao
 
-        public int NameTextOffset { get; set; }
+        public string NameTextOffset { get; set; }
 
         public bool NintenUsable { get; set; } //Second half   000X
         public bool AnaUsable { get; set; }    //Second half   00X0
@@ -35,15 +35,16 @@ namespace BottleRocket
 
         public byte[] GenerateTableEntry()
         {
-                byte[] result = new byte[8];
+            byte[] result = new byte[8];
 
-                byte[] namePointerBytes = HexHelpers.HexStringToByteArray(HexHelpers.Swap((NameTextOffset + 0x7FF0).ToString("X4")));
+            int textOffsetTemp = HexHelpers.HexStringToInt(NameTextOffset) + 0x7FF0;
+            string namePointerBytes = HexHelpers.Swap(textOffsetTemp.ToString("X4"));
 
-                //5A
+            //5A
 
-                byte digit2 = Convert.ToByte(
-                HexHelpers.InterpretBoolsAsBinary(new bool[]
-                {   //3
+            byte digit2 = Convert.ToByte(
+            HexHelpers.InterpretBoolsAsBinary(new bool[]
+            {   //3
                     Permanent,     //0
                     Edible,        //0
                     Unknown2,      //1
@@ -55,21 +56,22 @@ namespace BottleRocket
                     AnaUsable,     //1
                     NintenUsable   //1
 
-                    //...results in 0x3F
-                }));
+                //...results in 0x3F
+            }));
 
-                byte[] priceBytes = HexHelpers.HexStringToByteArray(HexHelpers.Swap(Price.ToString("X4")));
+            byte[] priceBytes = HexHelpers.HexStringToByteArray(HexHelpers.Swap(Price.ToString("X4")));
 
-                result[0] = namePointerBytes[0];
-                result[1] = namePointerBytes[1];
-                result[2] = digit2;
-                result[3] = WeaponStrength; //originally I was using Convert.ToByte for [3], [4], and [5], but they seem to work without it
-                result[4] = EffectOutsideOfBattle;
-                result[5] = EffectInBattle;
-                result[6] = priceBytes[0];
-                result[7] = priceBytes[1];
+            result[0] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(0, 2));
+            result[1] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(2, 2));
 
-                return result;
+            result[2] = digit2;
+            result[3] = WeaponStrength;
+            result[4] = EffectOutsideOfBattle;
+            result[5] = EffectInBattle;
+            result[6] = priceBytes[0];
+            result[7] = priceBytes[1];
+
+            return result;
         }
 
         public static Item ParseHex(byte[] input)
@@ -79,8 +81,8 @@ namespace BottleRocket
 
             var result = new Item();
 
-            var namePointerTemp = input[1].ToString("X2") + input[0].ToString("X2"); //for example, 4A80. we can swap it here so it's 804A
-            result.NameTextOffset = HexHelpers.HexStringToInt(namePointerTemp) - 0x7FF0; //subtract the magic NES number to get the proper ROM offset: 5A
+            var namePointerTemp = HexHelpers.HexStringToInt(input[1].ToString("X2") + input[0].ToString("X2")); //for example, 4A80. we can swap it here so it's 804A
+            result.NameTextOffset = (namePointerTemp - 0x7FF0).ToString("X4"); //subtract the magic NES number to get the proper ROM offset: 5A
 
             var itemProperties = HexHelpers.IntToBinaryString(input[2]); //get the one with all of the boolean values in it
             itemProperties = HexHelpers.Pad(itemProperties, 8); //pad the thing with zeroes so all of the properties can be set
@@ -104,7 +106,7 @@ namespace BottleRocket
 
             return result;
         }
-        
+
         private static bool GetProperty(string input, int position)
         {
             return input.Substring(position, 1) == "1"; //return true for 1 and false for 0. Thanks for the simplification, ReSharper
@@ -122,6 +124,6 @@ namespace BottleRocket
             var results = JsonConvert.DeserializeObject<List<Item>>(json);
             return results.ToArray();
         }
-        
+
     }
 }
