@@ -30,8 +30,8 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabItems = new System.Windows.Forms.TabPage();
-            this.btnApplyItemYML = new System.Windows.Forms.Button();
-            this.btnCreateItemYML = new System.Windows.Forms.Button();
+            this.btnImportItemJSON = new System.Windows.Forms.Button();
+            this.btnExportItemJSON = new System.Windows.Forms.Button();
             this.tabTeleport = new System.Windows.Forms.TabPage();
             this.tabTrain = new System.Windows.Forms.TabPage();
             this.tabLevelUp = new System.Windows.Forms.TabPage();
@@ -63,8 +63,8 @@
             // 
             // tabItems
             // 
-            this.tabItems.Controls.Add(this.btnApplyItemYML);
-            this.tabItems.Controls.Add(this.btnCreateItemYML);
+            this.tabItems.Controls.Add(this.btnImportItemJSON);
+            this.tabItems.Controls.Add(this.btnExportItemJSON);
             this.tabItems.Location = new System.Drawing.Point(4, 22);
             this.tabItems.Name = "tabItems";
             this.tabItems.Padding = new System.Windows.Forms.Padding(3);
@@ -73,23 +73,25 @@
             this.tabItems.Text = "Items";
             this.tabItems.UseVisualStyleBackColor = true;
             // 
-            // btnApplyItemYML
+            // btnImportItemJSON
             // 
-            this.btnApplyItemYML.Location = new System.Drawing.Point(7, 36);
-            this.btnApplyItemYML.Name = "btnApplyItemYML";
-            this.btnApplyItemYML.Size = new System.Drawing.Size(158, 23);
-            this.btnApplyItemYML.TabIndex = 0;
-            this.btnApplyItemYML.Text = "Import data to ROM";
-            this.btnApplyItemYML.UseVisualStyleBackColor = true;
+            this.btnImportItemJSON.Location = new System.Drawing.Point(7, 36);
+            this.btnImportItemJSON.Name = "btnImportItemJSON";
+            this.btnImportItemJSON.Size = new System.Drawing.Size(158, 23);
+            this.btnImportItemJSON.TabIndex = 0;
+            this.btnImportItemJSON.Text = "Import data to ROM";
+            this.btnImportItemJSON.UseVisualStyleBackColor = true;
+            this.btnImportItemJSON.Click += new System.EventHandler(this.btnImportItemJSON_Click);
             // 
-            // btnCreateItemYML
+            // btnExportItemJSON
             // 
-            this.btnCreateItemYML.Location = new System.Drawing.Point(7, 7);
-            this.btnCreateItemYML.Name = "btnCreateItemYML";
-            this.btnCreateItemYML.Size = new System.Drawing.Size(158, 23);
-            this.btnCreateItemYML.TabIndex = 0;
-            this.btnCreateItemYML.Text = "Export data from ROM";
-            this.btnCreateItemYML.UseVisualStyleBackColor = true;
+            this.btnExportItemJSON.Location = new System.Drawing.Point(7, 7);
+            this.btnExportItemJSON.Name = "btnExportItemJSON";
+            this.btnExportItemJSON.Size = new System.Drawing.Size(158, 23);
+            this.btnExportItemJSON.TabIndex = 0;
+            this.btnExportItemJSON.Text = "Export data from ROM";
+            this.btnExportItemJSON.UseVisualStyleBackColor = true;
+            this.btnExportItemJSON.Click += new System.EventHandler(this.btnExportItemJSON_Click);
             // 
             // tabTeleport
             // 
@@ -188,8 +190,8 @@
         private System.Windows.Forms.TabPage tabLevelUp;
         private System.Windows.Forms.TabPage tabPSI;
         private System.Windows.Forms.TabPage tabScript;
-        private System.Windows.Forms.Button btnApplyItemYML;
-        private System.Windows.Forms.Button btnCreateItemYML;
+        private System.Windows.Forms.Button btnImportItemJSON;
+        private System.Windows.Forms.Button btnExportItemJSON;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
     }

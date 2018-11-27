@@ -1,36 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
-using System.Windows.Forms;
 
 namespace BottleRocket
 {
     class HexHelpers
     {
-        public static string ROMpath = string.Empty;
-
-        public static void LoadInfo(string filepath)
-        {
-            ROMpath = filepath;
-        }
-
-        public static bool Validate(string filepath)
-        {
-            if (!filepath.Contains(".nes")) return false;
-
-            //TODO: Insert other checks to ensure it's an EB0 ROM. Don't make it check things that would be edited, though.
-
-            return true;
-        }
-
-        public static bool ROMisLoaded()
-        {
-            var status = ROMpath != string.Empty;
-            if (!status) MessageBox.Show("Please open a ROM!");
-            return status;
-        }
-        
         public static string IntToBinaryString(int input)
         {
             var result = Convert.ToString(input, 2);
@@ -159,6 +136,11 @@ namespace BottleRocket
             }
 
             return BinaryStringToInt(result.ToString());
+        }
+
+        public static string ReaderToASCII(BinaryReader reader, int numberOfChars)
+        {
+            return Encoding.ASCII.GetString(reader.ReadBytes(numberOfChars));
         }
     }
 }

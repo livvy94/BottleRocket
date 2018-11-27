@@ -18,13 +18,11 @@ namespace BottleRocket
             InitializeComponent();
         }
 
-        private void LoadROM(FileInfo file)
+        private void LoadROM(FileInfo file) //TODO: Declutter all of this stuff so I don't have to have System.IO in this cs file
         {
-            MessageBox.Show("this probably doesn't work yet");
-            if (!HexHelpers.Validate(file.DirectoryName)) return;
+            if (!FileStuff.RomIsGood(file.FullName)) return;
 
-            HexHelpers.LoadInfo(file.DirectoryName);
-            label2.Text = file.DirectoryName;
+            label2.Text = file.FullName;
             Text = file.Name;
         }
 
@@ -38,9 +36,9 @@ namespace BottleRocket
             };
 
             if (dialog.ShowDialog() != DialogResult.OK) return;
-            LoadROM(new FileInfo(dialog.SafeFileName));
+            LoadROM(new FileInfo(dialog.FileName));
         }
-        
+
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
             //https://support.microsoft.com/en-us/help/307966/how-to-provide-file-drag-and-drop-functionality-in-a-visual-c-applicat
@@ -55,38 +53,21 @@ namespace BottleRocket
             e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.All : DragDropEffects.None;
         }
 
-        //TODO: Use JSON instead of YML. Also, move stuff out of button click events and into classes
-        //private void btnCreateItemYML_Click(object sender, EventArgs e)
-        //{
-        //    if (!HexHelpers.ROMisLoaded()) return;
+        private void btnExportItemJSON_Click(object sender, EventArgs e)
+        {
+            if (!FileStuff.ROMisLoaded()) return;
 
-        //    using (var reader = new BinaryReader(File.Open(HexHelpers.ROMpath, FileMode.Open)))
-        //    {
-        //        //Read the item configuration table, and parse its entries into Item objects. Serialize them into YAML
-        //        var itemTableContents = new List<Item>();
-        //        var i = Item.START_OFFSET;
-        //        while (i < Item.END_OFFSET)
-        //        {
-        //            var tableEntry = reader.ReadBytes(8);
-        //            itemTableContents.Add(Item.ParseHex(tableEntry));
-        //            i = i + 8;
-        //        }
-        //        Item.ExportYml(itemTableContents.ToArray());
-        //    }
-        //}
+            var itemData = FileStuff.LoadItemDataFromROM();
+            Item.ExportJSON(itemData);
+        }
 
-        //private void btnApplyItemYML_Click(object sender, EventArgs e)
-        //{
-        //    if (!HexHelpers.ROMisLoaded()) return;
+        private void btnImportItemJSON_Click(object sender, EventArgs e)
+        {
+            if (!FileStuff.ROMisLoaded()) return;
 
-        //    //load the YML
-
-        //    //convert the YML into a list of Item objects
-
-        //    //foreach, write to the ROM - item.GenerateTableEntry();
-
-
-        //}
+            var items = FileStuff.LoadItemDataFromJSON();
+            FileStuff.SaveToROM(items);
+        }
     }
 }
 

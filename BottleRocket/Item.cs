@@ -1,15 +1,20 @@
 ﻿using System;
-using System.Collections;
-using System.IO;
-using System.Text;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace BottleRocket
 {
     public class Item
     {
         public const int START_OFFSET = 0x1810;
-        public const int END_OFFSET = 0x1C0F;
-        public const int TABLE_SIZE = 4; //TODO: Figure out what the actual size of the item data is
+        public const int END_OFFSET = 0x1C10; //the last byte of the last entry is 1C0F
+        public const int TABLE_SIZE = END_OFFSET - START_OFFSET; //Is this ever going to be used?
+        public const int NUMBER_OF_ENTRIES = 128; //There are 128 items in the table, though quite a few of them are dummied out
+        
+        //In the future, something cool to do would be to make it not dependent on there being the same number of entries,
+        //and make it so that you can change the order, and it affects references to item numbers throughout the map data/rest of the ROM
+        //to let people "refactor" item usage and shuffle them around.
+        //Though now that just sounds like a pipe dream that might not even be worth it lmao
 
         public int NameTextOffset { get; set; }
 
@@ -99,27 +104,24 @@ namespace BottleRocket
 
             return result;
         }
-
-        //public static void ExportYml(Item[] items)
-        //{
-
-        //    var serializer = new Serializer();
-            
-        //    //aw beans
-
-        //    //Save the item data
-        //    using (var writer = new StreamWriter(@"item_configuration_table.yml"))
-        //    {
-                
-        //    }
-        //}
-
-        //loadYML
-        //?????
-
+        
         private static bool GetProperty(string input, int position)
         {
             return input.Substring(position, 1) == "1"; //return true for 1 and false for 0. Thanks for the simplification, ReSharper
         }
+
+        //https://www.newtonsoft.com/json/help/html/SerializingCollections.htm
+        public static void ExportJSON(Item[] itemData)
+        {
+            var json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
+            FileStuff.ExportItemJSON(json);
+        }
+
+        public static Item[] ImportJSON(string json)
+        {
+            var results = JsonConvert.DeserializeObject<List<Item>>(json);
+            return results.ToArray();
+        }
+        
     }
 }
