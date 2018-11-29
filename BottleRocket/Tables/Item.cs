@@ -44,7 +44,7 @@ namespace BottleRocket
 
             byte digit2 = Convert.ToByte(
             HexHelpers.InterpretBoolsAsBinary(new bool[]
-            {   //3
+            {       //3
                     Permanent,     //0
                     Edible,        //0
                     Unknown2,      //1

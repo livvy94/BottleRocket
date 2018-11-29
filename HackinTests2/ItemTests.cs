@@ -1,6 +1,5 @@
-﻿using System;
+﻿using BottleRocket;
 using NUnit.Framework;
-using BottleRocket;
 
 namespace HackinTests
 {
@@ -10,7 +9,7 @@ namespace HackinTests
         [Test]
         public void ItemToPointerTableEntry()
         {
-            var expectedEntry = new byte[8]
+            var expectedEntry = new byte[]
             {
                 //the Stun Gun. info from http://pkhack.fobby.net/misc/txt/eb0_1810.txt
                 0x4A,
@@ -46,7 +45,7 @@ namespace HackinTests
         [Test]
         public void PointerTableEntryToItem()
         {
-            var tableEntry = new byte[8]
+            var tableEntry = new byte[]
             {
                 //the Stun Gun
                 0x4A,
@@ -98,7 +97,7 @@ namespace HackinTests
         [Test]
         public void ItemToPointerTableEntry_NewTotallyRadicalExtendedOffset()
         {
-            var expectedEntry = new byte[8]
+            var expectedEntry = new byte[]
             {
                 //the Bullhorn
                 0x6D,
@@ -134,7 +133,7 @@ namespace HackinTests
         [Test]
         public void PointerTableEntryToItem_NewTotallyRadicalExtendedOffset()
         {
-            var tableEntry = new byte[8]
+            var tableEntry = new byte[]
             {
                 //the Bullhorn
                 0x6D,
