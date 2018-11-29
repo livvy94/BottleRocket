@@ -35,6 +35,12 @@ namespace BottleRocket
             return result;
         }
 
+        public static int ByteArrayToInt(byte[] input)
+        {
+            var result = ByteArrayToHexString(input, false);
+            return HexStringToInt(result);
+        }
+
         public static byte[] HexStringToByteArray(string input)
         {
             var result = new List<byte>();
