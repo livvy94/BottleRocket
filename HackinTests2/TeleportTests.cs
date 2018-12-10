@@ -24,11 +24,16 @@ namespace HackinTests
             var test = new TeleportLocation
             {
                 NameTextOffset = "03E3",
-                X = 0x3386, //Is this even correct??
-                Y = 0x5146 //TODO: After JSON works, try increasing MyHome's X by one and see what happens
+                Song = 0x86,
+                X = 0x33,
+                MinitileCode = 4,
+                Direction = "west",
+                Y = 0x51
             };
 
-            Assert.AreEqual(expectedEntry, test.GenerateTableEntry());
+            var testBytes = test.GenerateTableEntry();
+
+            Assert.AreEqual(expectedEntry, testBytes);
         }
 
         [Test]
@@ -40,7 +45,7 @@ namespace HackinTests
                 0x84,
                 0x86,
                 0xCA,
-                0x86,
+                0x83,
                 0x4B,
                 0x00,
                 0x00
@@ -49,8 +54,11 @@ namespace HackinTests
             var test = new TeleportLocation
             {
                 NameTextOffset = "0421",
-                X = 0xCA86,
-                Y = 0x4B86
+                Song = 0x86,
+                X = 0xCA,
+                MinitileCode = 8,
+                Direction = "southeast",
+                Y = 0x4B
             };
 
             Assert.AreEqual(expectedEntry, test.GenerateTableEntry());
@@ -71,17 +79,23 @@ namespace HackinTests
                 0x00
             };
 
+            var test = TeleportLocation.ParseHex(tableEntry);
+
             var expectedLocation = new TeleportLocation
             {
                 NameTextOffset = "03E3",
-                X = 0x3386,
-                Y = 0x5146
+                Song = 0x86,
+                X = 0x33,
+                MinitileCode = 4,
+                Direction = "west",
+                Y = 0x51
             };
 
-            var test = TeleportLocation.ParseHex(tableEntry);
-
             Assert.AreEqual(expectedLocation.NameTextOffset, test.NameTextOffset);
+            Assert.AreEqual(expectedLocation.Song, test.Song);
             Assert.AreEqual(expectedLocation.X, test.X);
+            Assert.AreEqual(expectedLocation.Direction, test.Direction);
+            Assert.AreEqual(expectedLocation.MinitileCode, test.MinitileCode);
             Assert.AreEqual(expectedLocation.Y, test.Y);
         }
 
@@ -103,14 +117,20 @@ namespace HackinTests
             var expectedLocation = new TeleportLocation
             {
                 NameTextOffset = "0421",
-                X = 0xCA86,
-                Y = 0x4B86
+                Song = 0x86,
+                X = 0xCA,
+                MinitileCode = 8,
+                Direction = "west",
+                Y = 0x4B
             };
 
             var test = TeleportLocation.ParseHex(tableEntry);
 
             Assert.AreEqual(expectedLocation.NameTextOffset, test.NameTextOffset);
+            Assert.AreEqual(expectedLocation.Song, test.Song);
             Assert.AreEqual(expectedLocation.X, test.X);
+            Assert.AreEqual(expectedLocation.Direction, test.Direction);
+            Assert.AreEqual(expectedLocation.MinitileCode, test.MinitileCode);
             Assert.AreEqual(expectedLocation.Y, test.Y);
         }
     }

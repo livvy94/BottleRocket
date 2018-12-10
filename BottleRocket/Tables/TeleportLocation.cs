@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace BottleRocket.Tables
@@ -10,12 +8,15 @@ namespace BottleRocket.Tables
     {
         public const int START_OFFSET = 0x1C10;
         public const int END_OFFSET = 0x1C50;
-        public const int TABLE_SIZE = END_OFFSET - START_OFFSET;
         public const int NUMBER_OF_ENTRIES = 8;
+        public const string JSON_PATH = @"teleport_configuration_table.json";
 
-        public string NameTextOffset { get; set; } //Bytes 0 and 1
-        public int X { get; set; } //Bytes 2 and 3
-        public int Y { get; set; } //Bytes 4 and 5
+        public string NameTextOffset; //Bytes 0 and 1       0xD383 "MyHome"
+        public byte Song; //Byte 2                          0x86
+        public byte X; //Byte 3                             0x33
+        public byte MinitileCode; //Byte 4, first half      0x4
+        public string Direction; //byte 4, 2nd half          0x6
+        public byte Y; //Byte 5                             0x51
         //Bytes 6 and 7 are unused
 
         public byte[] GenerateTableEntry()
@@ -25,21 +26,35 @@ namespace BottleRocket.Tables
             int textOffsetTemp = HexHelpers.HexStringToInt(NameTextOffset) + 0x7FF0;
             string namePointerBytes = HexHelpers.Swap(textOffsetTemp.ToString("X4"));
 
-            string xString = HexHelpers.IntToHexString(X, false);
-            string yString = HexHelpers.IntToHexString(Y, false);
+            byte direction;
+            Direction = Direction.ToLower().Trim();
 
-            xString = HexHelpers.Pad(xString, 4); //Force it to be two bytes
-            xString = HexHelpers.Swap(xString); //Swap them
-            yString = HexHelpers.Pad(yString, 4);
-            yString = HexHelpers.Swap(yString);
-            
+            if (Direction == "north" || Direction == "up")
+                direction = 0;
+            else if (Direction == "northeast")
+                direction = 1;
+            else if (Direction == "east" || Direction == "right")
+                direction = 2;
+            else if (Direction == "southeast")
+                direction = 3;
+            else if (Direction == "south" || Direction == "down")
+                direction = 4;
+            else if (Direction == "southwest")
+                direction = 5;
+            else if (Direction == "west" || Direction == "left")
+                direction = 6;
+            else if (Direction == "northwest")
+                direction = 7;
+            else throw new ArgumentException(
+                $"Invalid compass direction: {Direction}\r\n" +
+                 "Please use north, northeast, east, southeast, etc.");
 
             result[0] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(0, 2));
             result[1] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(2, 2));
-            result[2] = (byte)HexHelpers.HexStringToInt(xString.Substring(0, 2));
-            result[3] = (byte)HexHelpers.HexStringToInt(xString.Substring(2, 2));
-            result[4] = (byte)HexHelpers.HexStringToInt(yString.Substring(0, 2));
-            result[5] = (byte)HexHelpers.HexStringToInt(yString.Substring(2, 2));
+            result[2] = Song;
+            result[3] = X;
+            result[4] = (byte)HexHelpers.HexStringToInt(MinitileCode.ToString("X1") + direction);
+            result[5] = Y;
             result[6] = 0x00; //Unused byte
             result[7] = 0x00; //Unused byte
             return result;
@@ -51,24 +66,48 @@ namespace BottleRocket.Tables
                 throw new ArgumentException("This pointer table entry isn't eight hex codes long...");
 
             var namePointerTemp = HexHelpers.HexStringToInt(input[1].ToString("X2") + input[0].ToString("X2"));
-            
+
+            var minitileTemp = input[4].ToString("X2").Substring(0, 1);
+            var directionTemp = byte.Parse(input[4].ToString("X2").Substring(1, 1));
+            var directionStringTemp = string.Empty;
+
+            if (directionTemp == 0)
+                directionStringTemp = "north";
+            else if (directionTemp == 1)
+                directionStringTemp = "northeast";
+            else if (directionTemp == 2)
+                directionStringTemp = "east";
+            else if (directionTemp == 3)
+                directionStringTemp = "southeast";
+            else if (directionTemp == 4)
+                directionStringTemp = "south";
+            else if (directionTemp == 5)
+                directionStringTemp = "southwest";
+            else if (directionTemp == 6)
+                directionStringTemp = "west";
+            else if (directionTemp == 7)
+                directionStringTemp = "northwest";
+
             var result = new TeleportLocation
             {
                 NameTextOffset = (namePointerTemp - 0x7FF0).ToString("X4"),
-                X = HexHelpers.ByteArrayToInt(new[] {input[3], input[2]}),
-                Y = HexHelpers.ByteArrayToInt(new[] {input[5], input[4]})
+                Song = input[2],
+                X = input[3],
+                MinitileCode = (byte)HexHelpers.HexStringToInt(minitileTemp),
+                Direction = directionStringTemp,
+                Y = input[5]
             };
 
             return result;
         }
 
-        public static void ExportJSON(TeleportLocation[] locations)
+        public static void ExportJson(TeleportLocation[] locations)
         {
             var json = JsonConvert.SerializeObject(locations, Formatting.Indented);
-            FileStuff.ExportItemJSON(json);
+            FileStuff.ExportJson(json, JSON_PATH);
         }
 
-        public static TeleportLocation[] ImportJSON(string json)
+        public static TeleportLocation[] ImportJson(string json)
         {
             var results = JsonConvert.DeserializeObject<List<TeleportLocation>>(json);
             return results.ToArray();
