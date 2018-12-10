@@ -132,6 +132,7 @@
             this.btnImportTeleport.TabIndex = 1;
             this.btnImportTeleport.Text = "Import data to ROM";
             this.btnImportTeleport.UseVisualStyleBackColor = true;
+            this.btnImportTeleport.Click += new System.EventHandler(this.btnImportTeleport_Click);
             // 
             // btnExportTeleport
             // 
@@ -141,6 +142,7 @@
             this.btnExportTeleport.TabIndex = 2;
             this.btnExportTeleport.Text = "Export data from ROM";
             this.btnExportTeleport.UseVisualStyleBackColor = true;
+            this.btnExportTeleport.Click += new System.EventHandler(this.btnExportTeleport_Click);
             // 
             // tabTrain
             // 

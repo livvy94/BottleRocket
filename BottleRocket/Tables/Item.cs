@@ -8,9 +8,8 @@ namespace BottleRocket
     {
         public const int START_OFFSET = 0x1810;
         public const int END_OFFSET = 0x1C10; //the last byte of the last entry is 1C0F
-        public const int TABLE_SIZE = END_OFFSET - START_OFFSET; //Is this ever going to be used?
         public const int NUMBER_OF_ENTRIES = 128; //There are 128 items in the table, though quite a few of them are dummied out
-
+        public const string JSON_PATH = @"item_configuration_table.json";
         //In the future, something cool to do would be to make it not dependent on there being the same number of entries,
         //and make it so that you can change the order, and it affects references to item numbers throughout the map data/rest of the ROM
         //to let people "refactor" item usage and shuffle them around.
@@ -38,7 +37,7 @@ namespace BottleRocket
             byte[] result = new byte[8];
 
             int textOffsetTemp = HexHelpers.HexStringToInt(NameTextOffset) + 0x7FF0;
-            string namePointerBytes = HexHelpers.Swap(textOffsetTemp.ToString("X4"));
+            string namePointerBytes = textOffsetTemp.ToString("X4");
 
             //5A
 
@@ -61,8 +60,8 @@ namespace BottleRocket
 
             byte[] priceBytes = HexHelpers.HexStringToByteArray(HexHelpers.Swap(Price.ToString("X4")));
 
-            result[0] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(0, 2));
-            result[1] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(2, 2));
+            result[0] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(2, 2));
+            result[1] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(0, 2));
 
             result[2] = digit2;
             result[3] = WeaponStrength;
@@ -116,7 +115,7 @@ namespace BottleRocket
         public static void ExportJSON(Item[] itemData)
         {
             var json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
-            FileStuff.ExportItemJSON(json);
+            FileStuff.ExportJson(json, JSON_PATH);
         }
 
         public static Item[] ImportJSON(string json)
@@ -124,6 +123,5 @@ namespace BottleRocket
             var results = JsonConvert.DeserializeObject<List<Item>>(json);
             return results.ToArray();
         }
-
     }
 }

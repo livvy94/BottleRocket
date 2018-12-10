@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using BottleRocket.Tables;
 
 namespace BottleRocket
 {
@@ -21,6 +17,7 @@ namespace BottleRocket
             MinimumSize = Size;
         }
 
+        #region Methods for opening the ROM
         private void LoadROM(FileSystemInfo file) //TODO: Declutter all of this stuff so I don't have to have System.IO in this cs file
         {
             if (!FileStuff.RomIsGood(file.FullName)) return;
@@ -55,6 +52,7 @@ namespace BottleRocket
         {
             e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.All : DragDropEffects.None;
         }
+        #endregion
 
         private void btnExportItemJSON_Click(object sender, EventArgs e)
         {
@@ -68,8 +66,24 @@ namespace BottleRocket
         {
             if (!FileStuff.ROMisLoaded()) return;
 
-            var items = FileStuff.LoadItemDataFromJSON();
-            FileStuff.SaveToROM(items);
+            var itemData = FileStuff.LoadItemDataFromJson();
+            FileStuff.SaveToROM(itemData);
+        }
+
+        private void btnExportTeleport_Click(object sender, EventArgs e)
+        {
+            if (!FileStuff.ROMisLoaded()) return;
+
+            var teleportData = FileStuff.LoadTeleportDataFromROM();
+            TeleportLocation.ExportJson(teleportData);
+        }
+
+        private void btnImportTeleport_Click(object sender, EventArgs e)
+        {
+            if (!FileStuff.ROMisLoaded()) return;
+
+            var teleportData = FileStuff.LoadTeleportDataFromJson();
+            FileStuff.SaveToROM(teleportData);
         }
     }
 }

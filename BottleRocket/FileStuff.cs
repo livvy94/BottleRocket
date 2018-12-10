@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
+using BottleRocket.Tables;
 
 namespace BottleRocket
 {
     class FileStuff
     {
         private const string FINISHED = @"Finished inserting data! Refresh your hex editor!";
-        private const string ITEM_JSON_PATH = @"item_configuration_table.json";
 
+
+        #region Methods for loading a ROM
         public static string ROMpath = string.Empty;
-
         public static bool RomIsGood(string filepath)
         {
             ROMpath = filepath;
@@ -37,16 +37,43 @@ namespace BottleRocket
             if (!status) MessageBox.Show(@"Please open a ROM!");
             return status;
         }
+        #endregion
 
-        public static void ExportItemJSON(string json)
+        #region Methods for Serializing and Deserializing JSON
+        public static void ExportJson(string json, string path) //multi-purpose!
         {
-            using (var writer = new StreamWriter(ITEM_JSON_PATH))
+            using (var writer = new StreamWriter(path))
             {
                 writer.Write(json);
             }
-            MessageBox.Show($"Finished writing {ITEM_JSON_PATH}");
+            MessageBox.Show($"Finished writing {path}");
         }
 
+
+        public static Item[] LoadItemDataFromJson()
+        {
+            var jsonText = string.Empty;
+            using (var reader = new StreamReader(Item.JSON_PATH))
+            {
+                jsonText = reader.ReadToEnd();
+            }
+
+            return Item.ImportJSON(jsonText);
+        }
+
+        public static TeleportLocation[] LoadTeleportDataFromJson()
+        {
+            var jsonText = string.Empty;
+            using (var reader = new StreamReader(TeleportLocation.JSON_PATH))
+            {
+                jsonText = reader.ReadToEnd();
+            }
+
+            return TeleportLocation.ImportJson(jsonText);
+        }
+        #endregion
+
+        #region Methods for reading from the ROM
         public static Item[] LoadItemDataFromROM()
         {
             //Read the item configuration table in the ROM, and parse what it finds into Item objects
@@ -66,16 +93,25 @@ namespace BottleRocket
             return itemTableContents.ToArray();
         }
 
-        public static Item[] LoadItemDataFromJSON()
+        public static TeleportLocation[] LoadTeleportDataFromROM()
         {
-            var jsonText = string.Empty;
-            using (var reader = new StreamReader(ITEM_JSON_PATH))
+            var teleportTableContents = new List<TeleportLocation>();
+            using (var reader = new BinaryReader(File.Open(ROMpath, FileMode.Open)))
             {
-                jsonText = reader.ReadToEnd();
+                reader.BaseStream.Position = TeleportLocation.START_OFFSET;
+
+                while (reader.BaseStream.Position < TeleportLocation.END_OFFSET)
+                {
+                    var tableEntry = reader.ReadBytes(8);
+                    teleportTableContents.Add(TeleportLocation.ParseHex(tableEntry));
+                }
             }
 
-            return Item.ImportJSON(jsonText);
+            return teleportTableContents.ToArray();
         }
+        #endregion
+
+        #region Methods for writing to the ROM
 
         public static void SaveToROM(Item[] items) //eventually, there will be other overloaded versions of SaveToROM for other data
         {
@@ -88,28 +124,45 @@ namespace BottleRocket
                 pointerTable.AddRange(item.GenerateTableEntry());
             }
 
+            WriteToROM(pointerTable, Item.START_OFFSET);
+        }
+
+        public static void SaveToROM(TeleportLocation[] teleportLocations)
+        {
+            if (WrongNumberOfEntries(TeleportLocation.NUMBER_OF_ENTRIES, teleportLocations.Length)) return;
+
+            var teleportTable = new List<byte>();
+            foreach (var location in teleportLocations)
+            {
+                teleportTable.AddRange(location.GenerateTableEntry());
+            }
+
+            WriteToROM(teleportTable, TeleportLocation.START_OFFSET);
+        }
+
+        public static void WriteToROM(List<byte> table, int offset) //heck yeah this is its own method now
+        {
             //http://www.java2s.com/Tutorials/CSharp/System.IO/BinaryWriter/C_BinaryWriter_Write_Byte_Array.htm
             using (var stream = new FileStream(ROMpath, FileMode.Open, FileAccess.Write))
             {
                 using (var romWriter = new BinaryWriter(stream))
                 {
-                    romWriter.Seek(Item.START_OFFSET, SeekOrigin.Begin);
-                    romWriter.Write(pointerTable.ToArray());
+                    romWriter.Seek(offset, SeekOrigin.Begin);
+                    romWriter.Write(table.ToArray());
                 }
             }
-            
+
             MessageBox.Show(FINISHED);
         }
 
+        #endregion
+
         private static bool WrongNumberOfEntries(int expectedNumber, int number)
         {
-            if (expectedNumber != number)
-            {
-                MessageBox.Show($"ERROR: Wrong number of items!\r\n(Should be {expectedNumber}, but instead it's {number}.)");
-                return true;
-            }
+            if (expectedNumber == number) return false;
+            MessageBox.Show($"ERROR: Wrong number of items!\r\n(Should be {expectedNumber}, but instead it's {number}.)");
+            return true;
 
-            return false;
         }
     }
 }
