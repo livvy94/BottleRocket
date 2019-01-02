@@ -11,32 +11,33 @@ namespace HackinTests
         {
             var expectedEntry = new byte[]
             {
-                //the Stun Gun. info from http://pkhack.fobby.net/misc/txt/eb0_1810.txt
-                0x4A,
+                //the Aluminum Bat. info from http://pkhack.fobby.net/misc/txt/eb0_1810.txt
+                0x72,
                 0x80,
-                0x04,
-                0x0F,
+                0x01,
+                0x1E,
                 0x02,
                 0x00,
-                0x2C,
-                0x01
+                0xE8,
+                0x03
             };
 
             var test = new Item
             {
-                NameTextOffset = "005A", //pointer is 4A80. swap it. 804A - 7FF0 = 5A <-- actual offset
-                NintenUsable = false,
+                NameTextOffset = "0082", //pointer is 4A80. swap it. 804A - 7FF0 = 5A <-- actual offset
+                NintenUsable = true,
                 AnaUsable = false,
-                LloydUsable = true,
+                LloydUsable = false,
                 TeddyUsable = false,
                 Unknown1 = false,
                 Unknown2 = false,
                 Edible = false,
                 Permanent = false,
-                WeaponStrength = 0x0F,
+                EquippableStrength = 0b011110,
+                Type = "Weapon",
                 EffectOutsideOfBattle = 0x02,
                 EffectInBattle = 0x00,
-                Price = 300 //entry in the pointer table is 2C01, 012C is 300 in decimal
+                Price = 1000
             };
 
             Assert.AreEqual(expectedEntry, test.GenerateTableEntry());
@@ -47,32 +48,33 @@ namespace HackinTests
         {
             var tableEntry = new byte[]
             {
-                //the Stun Gun
-                0x4A,
+                //the Aluminum Bat
+                0x72,
                 0x80,
-                0x04,
-                0x0F,
+                0x01,
+                0x1E,
                 0x02,
                 0x00,
-                0x2C,
-                0x01
+                0xE8,
+                0x03
             };
 
             var expectedItem = new Item
             {
-                NameTextOffset = "005A",
-                NintenUsable = false,
+                NameTextOffset = "0082",
+                NintenUsable = true,
                 AnaUsable = false,
-                LloydUsable = true,
+                LloydUsable = false,
                 TeddyUsable = false,
                 Unknown1 = false,
                 Unknown2 = false,
                 Edible = false,
                 Permanent = false,
-                WeaponStrength = 0x0F,
+                EquippableStrength = 0b011110,
+                Type = "Weapon",
                 EffectOutsideOfBattle = 0x02,
                 EffectInBattle = 0x00,
-                Price = 300
+                Price = 1000
             };
 
             var test = Item.ParseHex(tableEntry);
@@ -87,7 +89,8 @@ namespace HackinTests
             Assert.AreEqual(expectedItem.Unknown2, test.Unknown2);
             Assert.AreEqual(expectedItem.Edible, test.Edible);
             Assert.AreEqual(expectedItem.Permanent, test.Permanent);
-            Assert.AreEqual(expectedItem.WeaponStrength, test.WeaponStrength);
+            Assert.AreEqual(expectedItem.EquippableStrength, test.EquippableStrength);
+            Assert.AreEqual(expectedItem.Type, test.Type);
             Assert.AreEqual(expectedItem.EffectOutsideOfBattle, test.EffectOutsideOfBattle);
             Assert.AreEqual(expectedItem.EffectInBattle, test.EffectInBattle);
             Assert.AreEqual(expectedItem.Price, test.Price);
@@ -121,7 +124,9 @@ namespace HackinTests
                 Unknown2 = true,
                 Edible = false,
                 Permanent = false,
-                WeaponStrength = 0x00,
+                //WeaponStrength = 0x00,
+                EquippableStrength = 0,
+                Type = "Weapon",
                 EffectOutsideOfBattle = 0x00,
                 EffectInBattle = 0x3C,
                 Price = 0
@@ -157,7 +162,8 @@ namespace HackinTests
                 Unknown2 = true,
                 Edible = false,
                 Permanent = false,
-                WeaponStrength = 0x00,
+                EquippableStrength = 0,
+                Type = "Weapon",
                 EffectOutsideOfBattle = 0x00,
                 EffectInBattle = 0x3C,
                 Price = 0
@@ -175,7 +181,8 @@ namespace HackinTests
             Assert.AreEqual(expectedItem.Unknown2, test.Unknown2);
             Assert.AreEqual(expectedItem.Edible, test.Edible);
             Assert.AreEqual(expectedItem.Permanent, test.Permanent);
-            Assert.AreEqual(expectedItem.WeaponStrength, test.WeaponStrength);
+            Assert.AreEqual(expectedItem.EquippableStrength, test.EquippableStrength);
+            Assert.AreEqual(expectedItem.Type, test.Type);
             Assert.AreEqual(expectedItem.EffectOutsideOfBattle, test.EffectOutsideOfBattle);
             Assert.AreEqual(expectedItem.EffectInBattle, test.EffectInBattle);
             Assert.AreEqual(expectedItem.Price, test.Price);

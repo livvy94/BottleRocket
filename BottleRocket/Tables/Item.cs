@@ -27,7 +27,8 @@ namespace BottleRocket
         public bool Edible { get; set; }       //First half    0X00
         public bool Permanent { get; set; }    //First half    X000
 
-        public byte WeaponStrength { get; set; }
+        public int EquippableStrength { get; set; }
+        public string Type { get; set; }
         public byte EffectOutsideOfBattle { get; set; }
         public byte EffectInBattle { get; set; }
         public int Price { get; set; }
@@ -58,13 +59,26 @@ namespace BottleRocket
                 //...results in 0x3F
             }));
 
+            //build the third number
+            var tempThree = HexHelpers.IntToBinaryString(EquippableStrength, 5);
+
+            if (Type == "Weapon") tempThree += "00";
+            else if (Type == "Coin") tempThree += "01";
+            else if (Type == "Ring") tempThree += "10";
+            else if (Type == "Pendant") tempThree += "11";
+            else throw new ArgumentException(
+                @"Items can only be weapons, coins, rings, or pendants...
+Normal items are just weapons with zero strength, which makes them non-equippable.");
+
+            tempThree = HexHelpers.Reverse(tempThree); //the 1s and 0s stored in reverse order...ick
+
             byte[] priceBytes = HexHelpers.HexStringToByteArray(HexHelpers.Swap(Price.ToString("X4")));
 
             result[0] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(2, 2));
             result[1] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(0, 2));
 
             result[2] = digit2;
-            result[3] = WeaponStrength;
+            result[3] = (byte)HexHelpers.BinaryStringToInt(tempThree);
             result[4] = EffectOutsideOfBattle;
             result[5] = EffectInBattle;
             result[6] = priceBytes[0];
@@ -86,6 +100,11 @@ namespace BottleRocket
             var itemProperties = HexHelpers.IntToBinaryString(input[2]); //get the one with all of the boolean values in it
             itemProperties = HexHelpers.Pad(itemProperties, 8); //pad the thing with zeroes so all of the properties can be set
 
+            var strengthAndTypeTemp = HexHelpers.IntToBinaryString(input[3], 8);
+            strengthAndTypeTemp = HexHelpers.Reverse(strengthAndTypeTemp); //make the string of 1s and 0s not be in reverse order so we can work with it
+            var typeTemp = HexHelpers.BinaryStringToInt(strengthAndTypeTemp.Substring(6, 2));
+            var strengthTemp = HexHelpers.BinaryStringToInt(strengthAndTypeTemp.Substring(0, 6));
+
             //set properties based on the 1s and 0s
             result.Permanent = GetProperty(itemProperties, 0);
             result.Edible = GetProperty(itemProperties, 1);
@@ -96,7 +115,13 @@ namespace BottleRocket
             result.AnaUsable = GetProperty(itemProperties, 6);
             result.NintenUsable = GetProperty(itemProperties, 7);
 
-            result.WeaponStrength = input[3];
+            result.EquippableStrength = strengthTemp;
+
+            if (typeTemp == 0) result.Type = "Weapon";
+            if (typeTemp == 1) result.Type = "Coin";
+            if (typeTemp == 2) result.Type = "Ring";
+            if (typeTemp == 3) result.Type = "Pendant";
+
             result.EffectOutsideOfBattle = input[4];
             result.EffectInBattle = input[5];
 

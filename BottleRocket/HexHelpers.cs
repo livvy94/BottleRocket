@@ -14,6 +14,12 @@ namespace BottleRocket
             return Pad(result);
         }
 
+        public static string IntToBinaryString(int input, int length)
+        {
+            var result = IntToBinaryString(input);
+            return Pad(result, length);
+        }
+
         public static int BinaryStringToInt(string input)
         {
             input = HexClean(input);
@@ -147,6 +153,14 @@ namespace BottleRocket
         public static string ReaderToASCII(BinaryReader reader, int numberOfChars)
         {
             return Encoding.ASCII.GetString(reader.ReadBytes(numberOfChars));
+        }
+
+        public static string Reverse(string input)
+        {
+            //https://www.dotnetperls.com/reverse-string
+            var result = input.ToCharArray();
+            Array.Reverse(result);
+            return new string(result);
         }
     }
 }
