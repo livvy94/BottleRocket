@@ -101,9 +101,9 @@ Normal items are just weapons with zero strength, which makes them non-equippabl
             itemProperties = HexHelpers.Pad(itemProperties, 8); //pad the thing with zeroes so all of the properties can be set
 
             var strengthAndTypeTemp = HexHelpers.IntToBinaryString(input[3], 8);
-            strengthAndTypeTemp = HexHelpers.Reverse(strengthAndTypeTemp); //make the string of 1s and 0s not be in reverse order so we can work with it
-            var typeTemp = HexHelpers.BinaryStringToInt(strengthAndTypeTemp.Substring(6, 2));
-            var strengthTemp = HexHelpers.BinaryStringToInt(strengthAndTypeTemp.Substring(0, 6));
+            var strengthAndTypeTemp2 = HexHelpers.Reverse(strengthAndTypeTemp); //make the string of 1s and 0s not be in reverse order so we can work with it
+            var typeTemp = HexHelpers.BinaryStringToInt(strengthAndTypeTemp2.Substring(6, 2));
+            var strengthTemp = HexHelpers.BinaryStringToInt(strengthAndTypeTemp.Substring(2, 6));
 
             //set properties based on the 1s and 0s
             result.Permanent = GetProperty(itemProperties, 0);
