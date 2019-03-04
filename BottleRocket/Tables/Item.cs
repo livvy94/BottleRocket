@@ -60,7 +60,7 @@ namespace BottleRocket
             }));
 
             //build the third number
-            var tempThree = HexHelpers.IntToBinaryString(EquippableStrength, 5);
+            var tempThree = HexHelpers.IntToBinaryString(EquippableStrength, 6);
 
             if (Type == "Weapon") tempThree += "00";
             else if (Type == "Coin") tempThree += "01";

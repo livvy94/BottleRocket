@@ -16,7 +16,7 @@ namespace BottleRocket
 
         public static string IntToBinaryString(int input, int length)
         {
-            var result = IntToBinaryString(input);
+            var result = Convert.ToString(input, 2);
             return Pad(result, length);
         }
 
@@ -86,14 +86,6 @@ namespace BottleRocket
                 default:
                     throw new System.ArgumentException("Not sure how to swap that number of bytes...");
             }
-        }
-
-        public static int SwapBytes(int value, int size)
-        {
-            int val = 0;
-            for (int i = 0; i < size; i++)
-                val += ((value >> (size - 1 - i)) << i) & (1 << i);
-            return val;
         }
 
         public static byte[] Swap(byte[] input)
