@@ -88,6 +88,14 @@ namespace BottleRocket
             }
         }
 
+        public static int SwapBytes(int value, int size)
+        {
+            int val = 0;
+            for (int i = 0; i < size; i++)
+                val += ((value >> (size - 1 - i)) << i) & (1 << i);
+            return val;
+        }
+
         public static byte[] Swap(byte[] input)
         {
             switch (input.Length)

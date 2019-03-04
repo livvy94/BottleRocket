@@ -25,10 +25,10 @@ namespace HackinTests
             var test = new TrainDestination
             {
                 NameTextOffset = "03FD",
-                MusicToPlay = 37,
-                TrainStartLocationX = 79,
-                StartDirection = "redo this",
-                TrainStartLocationY = 0xff,
+                MusicToPlay = 9,
+                TrainStartLocationX = 1937,
+                StartDirection = "southeast",
+                TrainStartLocationY = 1621,
                 Price = 16
             };
 
