@@ -124,7 +124,6 @@ namespace HackinTests
                 Unknown2 = true,
                 Edible = false,
                 Permanent = false,
-                //WeaponStrength = 0x00,
                 EquippableStrength = 0,
                 Type = "Weapon",
                 EffectOutsideOfBattle = 0x00,

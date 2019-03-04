@@ -9,7 +9,7 @@ namespace BottleRocket.Tables
         public const int START_OFFSET = 0x1C10;
         public const int END_OFFSET = 0x1C50;
         public const int NUMBER_OF_ENTRIES = 8;
-        public const string JSON_PATH = @"teleport_configuration_table.json";
+        public const string JSON_PATH = @"teleport_location_table.json";
 
         public string NameTextOffset; //Bytes 0 and 1       0xD383 "MyHome"
         public byte Song; //Byte 2                          0x86
