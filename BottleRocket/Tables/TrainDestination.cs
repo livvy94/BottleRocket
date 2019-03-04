@@ -37,9 +37,9 @@ namespace BottleRocket.Tables
             //94 4F
 
             //TODO: OVERHAUL THESE LINES AAUGH
-            //string musicBytes = HexHelpers.Reverse(HexHelpers.Pad(HexHelpers.IntToBinaryString(MusicToPlay), 5));
-            //string trainStartLocationXBytes = HexHelpers.Pad(HexHelpers.Reverse(HexHelpers.IntToBinaryString(TrainStartLocationX, 11)));
-            //string bytesTwoAndThree = HexHelpers.IntToHexString(HexHelpers.BinaryStringToInt(musicBytes + trainStartLocationXBytes), false);
+            int musicBytes = HexHelpers.SwapBytes(MusicToPlay, 5);
+            int trainStartLocationXBytes = HexHelpers.SwapBytes(TrainStartLocationX, 11);
+            string bytesTwoAndThree = HexHelpers.IntToHexString(((musicBytes << 11) + trainStartLocationXBytes), false);
 
             byte direction; //TODO: Make sure these values are correct. If so, make into a class?
             if (StartDirection == "north" || StartDirection == "up")
@@ -70,10 +70,9 @@ namespace BottleRocket.Tables
             //to
             //3 1621
 
-            string directionBytes = HexHelpers.Reverse(HexHelpers.IntToBinaryString(direction, 5));
-            string trainStartLocationYBytes = HexHelpers.Reverse(HexHelpers.IntToBinaryString(TrainStartLocationY, 11));
-            string bytesFourAndFive = HexHelpers.IntToHexString(
-                HexHelpers.BinaryStringToInt(directionBytes + trainStartLocationYBytes), false);
+            int directionBytes = HexHelpers.SwapBytes(direction, 5);
+            int trainStartLocationYBytes = HexHelpers.SwapBytes(TrainStartLocationY, 11);
+            string bytesFourAndFive = HexHelpers.IntToHexString(((directionBytes << 11) + trainStartLocationYBytes), false);
 
             byte[] priceBytes = HexHelpers.HexStringToByteArray(HexHelpers.Swap(Price.ToString("X4")));
 
