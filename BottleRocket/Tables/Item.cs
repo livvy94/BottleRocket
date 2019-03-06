@@ -1,15 +1,93 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace BottleRocket
 {
-    public class Item
+    [StructLayout(LayoutKind.Sequential, Size=8, CharSet=CharSet.Ansi)]
+    public struct Item2
+    {
+        public ushort RawRomOffset;
+        public properties FlagsOfSomething;
+        public byte Equipment; //bits 0-5 can mean different things
+        public byte ItemActionNonBattle;
+        public byte ItemActionBattle;
+        public ushort Price;
+    }
+    public class Item2JsonDisplayable
+    {
+        public string RomOffset {get; private set;}
+        public static Item2JsonDisplayable FromItem2(Item2 items)
+        {
+            return new Item2JsonDisplayable
+            {
+                RomOffset = (items.RawRomOffset - 0x7FF0).ToString("X4"),
+            };
+        }
+    }
+    //https://stackoverflow.com/a/6336196/1329396
+    public static class Item2Marsheler
+    {
+        public static Item2 ReadFrom(byte[] buffer)
+        {
+            Type objType = typeof(Item2);
+            object obj = null;
+            if ((buffer != null) && (buffer.Length > 0))
+            {
+                IntPtr ptrObj = IntPtr.Zero;
+                try
+                {
+                    int objSize = Marshal.SizeOf(objType);
+                    if (objSize > 0)
+                    {
+                        if (buffer.Length < objSize)
+                            throw new Exception($"Buffer smaller than needed for creation of object of type {objType}");
+                        ptrObj = Marshal.AllocHGlobal(objSize);
+                        if (ptrObj != IntPtr.Zero)
+                        {
+                            Marshal.Copy(buffer, 0, ptrObj, objSize);
+                            obj = Marshal.PtrToStructure(ptrObj, objType);
+                        }
+                        else
+                            throw new Exception($"Couldn't allocate memory to create object of type {objType}");
+                    }
+                }
+                finally
+                {
+                    if (ptrObj != IntPtr.Zero)
+                        Marshal.FreeHGlobal(ptrObj);
+                }
+            }
+            return (Item2)obj;
+        }
+    }
+
+    [Flags]
+    public enum properties : byte
+    {
+        NintenUsable = 0b00000001,
+        AnaUsable    = 0b00000010,
+        LoidUsable   = 0b00000100,
+        TeddyUsable  = 0b00001000,
+        NotUsed1     = 0b00010000,
+        NotUsed2     = 0b00100000,
+        Edible       = 0b01000000,
+        Permanent    = 0b10000000,
+    }
+    public class ItemConstants
     {
         public const int START_OFFSET = 0x1810;
         public const int END_OFFSET = 0x1C10; //the last byte of the last entry is 1C0F
         public const int NUMBER_OF_ENTRIES = 128; //There are 128 items in the table, though quite a few of them are dummied out
         public const string JSON_PATH = @"item_configuration_table.json";
+    }
+    public class Item
+    {
+        // public const int START_OFFSET = 0x1810;
+        // public const int END_OFFSET = 0x1C10; //the last byte of the last entry is 1C0F
+        // public const int NUMBER_OF_ENTRIES = 128; //There are 128 items in the table, though quite a few of them are dummied out
+        // public const string JSON_PATH = @"item_configuration_table.json";
         //In the future, something cool to do would be to make it not dependent on there being the same number of entries,
         //and make it so that you can change the order, and it affects references to item numbers throughout the map data/rest of the ROM
         //to let people "refactor" item usage and shuffle them around.
@@ -17,15 +95,15 @@ namespace BottleRocket
 
         public string NameTextOffset { get; set; }
 
-        public bool NintenUsable { get; set; } //Second half   000X
-        public bool AnaUsable { get; set; }    //Second half   00X0
-        public bool LloydUsable { get; set; }  //Second half   0X00
-        public bool TeddyUsable { get; set; }  //Second half   X000
+        public bool NintenUsable { get; set; } //Second half   000X 0000
+        public bool AnaUsable { get; set; }    //Second half   00X0 0000
+        public bool LloydUsable { get; set; }  //Second half   0X00 0000
+        public bool TeddyUsable { get; set; }  //Second half   X000 0000
 
-        public bool Unknown1 { get; set; }     //First half    000X
-        public bool Unknown2 { get; set; }     //First half    00X0
-        public bool Edible { get; set; }       //First half    0X00
-        public bool Permanent { get; set; }    //First half    X000
+        public bool Unknown1 { get; set; }     //First half    0000 000X
+        public bool Unknown2 { get; set; }     //First half    0000 00X0
+        public bool Edible { get; set; }       //First half    0000 0X00
+        public bool Permanent { get; set; }    //First half    0000 X000
 
         public int EquippableStrength { get; set; }
         public string Type { get; set; }
@@ -140,7 +218,7 @@ Normal items are just weapons with zero strength, which makes them non-equippabl
         public static void ExportJSON(Item[] itemData)
         {
             var json = JsonConvert.SerializeObject(itemData, Formatting.Indented);
-            FileStuff.ExportJson(json, JSON_PATH);
+            FileStuff.ExportJson(json, ItemConstants.JSON_PATH);
         }
 
         public static Item[] ImportJSON(string json)

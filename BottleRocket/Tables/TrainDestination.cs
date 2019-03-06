@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace BottleRocket.Tables
-
 {
     public class TrainDestination
     {
@@ -26,22 +25,11 @@ namespace BottleRocket.Tables
             int textOffsetTemp = HexHelpers.HexStringToInt(NameTextOffset) + 0x7FF0;
             string namePointerBytes = HexHelpers.Swap(textOffsetTemp.ToString("X4"));
 
-            //37 (decimal)
-            //79 (decimal)
-            //to
-            //100101
-            //0001001111
-            //to
-            //1001010001001111
-            //to
-            //94 4F
-
-            //TODO: OVERHAUL THESE LINES AAUGH
             int musicBytes = HexHelpers.SwapBytes(MusicToPlay, 5);
             int trainStartLocationXBytes = HexHelpers.SwapBytes(TrainStartLocationX, 11);
             string bytesTwoAndThree = HexHelpers.IntToHexString(((musicBytes << 11) + trainStartLocationXBytes), false);
 
-            byte direction; //TODO: Make sure these values are correct. If so, make into a class?
+            byte direction;
             if (StartDirection == "north" || StartDirection == "up")
                 direction = 0;
             else if (StartDirection == "northeast")
@@ -62,14 +50,6 @@ namespace BottleRocket.Tables
                 $"Invalid compass direction: {StartDirection}\r\n" +
                 "Please use north, northeast, east, southeast, etc.");
 
-            //[C5][53]
-            //to
-            //11000 10101010011
-            //to
-            //00011 11001010101
-            //to
-            //3 1621
-
             int directionBytes = HexHelpers.SwapBytes(direction, 5);
             int trainStartLocationYBytes = HexHelpers.SwapBytes(TrainStartLocationY, 11);
             string bytesFourAndFive = HexHelpers.IntToHexString(((directionBytes << 11) + trainStartLocationYBytes), false);
@@ -85,6 +65,11 @@ namespace BottleRocket.Tables
             result[6] = priceBytes[0];
             result[7] = priceBytes[1];
             return result;
+        }
+
+        public static TrainDestination ParseHex(byte[] tableEntry)
+        {
+            throw new NotImplementedException();
         }
     }
 }

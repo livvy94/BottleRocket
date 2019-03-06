@@ -53,7 +53,7 @@ namespace BottleRocket
         public static Item[] LoadItemDataFromJson()
         {
             var jsonText = string.Empty;
-            using (var reader = new StreamReader(Item.JSON_PATH))
+            using (var reader = new StreamReader(ItemConstants.JSON_PATH))
             {
                 jsonText = reader.ReadToEnd();
             }
@@ -81,9 +81,9 @@ namespace BottleRocket
             var itemTableContents = new List<Item>();
             using (var reader = new BinaryReader(File.Open(ROMpath, FileMode.Open))) //Does this belong in Item.cs?
             {
-                reader.BaseStream.Position = Item.START_OFFSET;
+                reader.BaseStream.Position = ItemConstants.START_OFFSET;
 
-                while (reader.BaseStream.Position < Item.END_OFFSET)
+                while (reader.BaseStream.Position < ItemConstants.END_OFFSET)
                 {
                     var tableEntry = reader.ReadBytes(8);
                     itemTableContents.Add(Item.ParseHex(tableEntry));
@@ -115,7 +115,7 @@ namespace BottleRocket
 
         public static void SaveToROM(Item[] items) //eventually, there will be other overloaded versions of SaveToROM for other data
         {
-            if (WrongNumberOfEntries(Item.NUMBER_OF_ENTRIES, items.Length)) return;
+            if (WrongNumberOfEntries(ItemConstants.NUMBER_OF_ENTRIES, items.Length)) return;
 
             //Generate a pointer table from a list of Item objects, and save it to the ROM
             var pointerTable = new List<byte>();
@@ -124,7 +124,7 @@ namespace BottleRocket
                 pointerTable.AddRange(item.GenerateTableEntry());
             }
 
-            WriteToROM(pointerTable, Item.START_OFFSET);
+            WriteToROM(pointerTable, ItemConstants.START_OFFSET);
         }
 
         public static void SaveToROM(TeleportLocation[] teleportLocations)

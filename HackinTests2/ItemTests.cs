@@ -21,6 +21,11 @@ namespace HackinTests
                 0xE8,
                 0x03
             };
+//0x3f 0011 1111
+//     7654 3210 //https://www.linuxjournal.com/article/6788
+//>Bits 0-5: Who can use it
+//>Bit 6: If set, item is edible
+//>Bit 7: If set, item cannot be dropped
 
             var test = new Item
             {
@@ -28,8 +33,8 @@ namespace HackinTests
                 NintenUsable = true,
                 AnaUsable = false,
                 LloydUsable = false,
-                TeddyUsable = false,
-                Unknown1 = false,
+                TeddyUsable = false, //          v
+                Unknown1 = false,         //0011 1111
                 Unknown2 = false,
                 Edible = false,
                 Permanent = false,
@@ -41,6 +46,34 @@ namespace HackinTests
             };
 
             Assert.AreEqual(expectedEntry, test.GenerateTableEntry());
+        }
+        [Test]
+        public void Item2ToPointerTableEntry()
+        {
+            var itemInRom = new byte[]
+            {
+                0x72, 0x80, 0x01, 0x1E, 0x02, 0x00, 0xE8, 0x03
+            };
+
+            var expectedItem = new Item2
+            {
+                RawRomOffset = 0x8072,
+                FlagsOfSomething = properties.NintenUsable,
+                Equipment = 0x1E,
+                ItemActionNonBattle = 0x02,
+                ItemActionBattle = 0x00,
+                Price = 0x03E8
+            };
+
+            Assert.AreEqual(expectedItem, Item2Marsheler.ReadFrom(itemInRom));
+            Assert.That(expectedItem.FlagsOfSomething.HasFlag(properties.NintenUsable), Is.True);
+            Assert.That(expectedItem.FlagsOfSomething.HasFlag(properties.AnaUsable), Is.False);
+            Assert.That(expectedItem.FlagsOfSomething.HasFlag(properties.LoidUsable), Is.False);
+            Assert.That(expectedItem.FlagsOfSomething.HasFlag(properties.TeddyUsable), Is.False);
+            Assert.That(expectedItem.FlagsOfSomething.HasFlag(properties.NotUsed1), Is.False);
+            Assert.That(expectedItem.FlagsOfSomething.HasFlag(properties.NotUsed2), Is.False);
+            Assert.That(expectedItem.FlagsOfSomething.HasFlag(properties.Edible), Is.False);
+            Assert.That(expectedItem.FlagsOfSomething.HasFlag(properties.Permanent), Is.False);
         }
 
         [Test]
