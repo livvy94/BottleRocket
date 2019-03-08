@@ -1,7 +1,8 @@
 ﻿using BottleRocket.Tables;
+using BottleRocket.Core;
 using NUnit.Framework;
 
-namespace HackinTests
+namespace BottleRocket.Core.Tests
 {
     [TestFixture]
     public class TeleportTests

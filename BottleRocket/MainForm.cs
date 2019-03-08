@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using BottleRocket.Core;
 using BottleRocket.Tables;
 
 namespace BottleRocket
@@ -59,7 +60,8 @@ namespace BottleRocket
             if (!FileStuff.ROMisLoaded()) return;
 
             var itemData = FileStuff.LoadItemDataFromROM();
-            Item.ExportJSON(itemData);
+            throw new System.NotImplementedException("MaYbE L8r Sk8r");
+            //Item.ExportJSON(itemData);
         }
 
         private void btnImportItemJSON_Click(object sender, EventArgs e)
