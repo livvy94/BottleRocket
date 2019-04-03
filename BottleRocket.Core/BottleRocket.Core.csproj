@@ -33,11 +33,19 @@
   <ItemGroup>
     <Compile Include="DeleteMe.cs" />
     <Compile Include="Item.cs" />
-    <Compile Include="Item2JsonDisplayable.cs" />
+    <Compile Include="ItemJson.cs" />
     <Compile Include="ItemMarsheler.cs" />
     <Compile Include="ItemAttributes.cs" />
     <Compile Include="ItemConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

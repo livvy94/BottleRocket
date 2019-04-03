@@ -31,10 +31,10 @@ namespace BottleRocket.Core.Tests
             Assert.That(expectedItem, Is.EqualTo(actualItem));
             Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.NintenUsable), Is.True);
             Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.AnaUsable), Is.False);
-            Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.LoidUsable), Is.False);
+            Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.LloydUsable), Is.False);
             Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.TeddyUsable), Is.False);
-            Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.NotUsed1), Is.False);
-            Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.NotUsed2), Is.False);
+            Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.Unknown1), Is.False);
+            Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.Unknown2), Is.False);
             Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.Edible), Is.False);
             Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.Permanent), Is.False);
         }
@@ -62,10 +62,10 @@ namespace BottleRocket.Core.Tests
             Assert.That(expectedItem.RomOffset, Is.EqualTo(0x037D));
             Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.NintenUsable), Is.True);
             Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.AnaUsable), Is.True);
-            Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.LoidUsable), Is.True);
+            Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.LloydUsable), Is.True);
             Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.TeddyUsable), Is.True);
-            Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.NotUsed1), Is.True);
-            Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.NotUsed2), Is.True);
+            Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.Unknown1), Is.True);
+            Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.Unknown2), Is.True);
             Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.Edible), Is.False);
             Assert.That(expectedItem.ItemAttributes.HasFlag(ItemAttributes.Permanent), Is.False);
         }

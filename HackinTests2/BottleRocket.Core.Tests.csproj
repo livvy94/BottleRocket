@@ -41,12 +41,16 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ItemJsonReaderTests.cs" />
     <Compile Include="ItemMarshelerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TeleportTests.cs" />
     <Compile Include="TrainDestinationTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="GoldenFiles\golden_items.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

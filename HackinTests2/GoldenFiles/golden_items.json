@@ -1,0 +1,37 @@
+[
+  //Should be 01 80 3F 00 10 75 00 00
+  {
+    "NameTextOffset": "0011",
+    "NintenUsable": true,
+    "AnaUsable": true,
+    "LloydUsable": true,
+    "TeddyUsable": true,
+    "Unknown1": true,
+    "Unknown2": true,
+    "Edible": false,
+    "Permanent": false,
+    "EquippableStrength": 0,
+    "Type": "Weapon",
+    "EffectOutsideOfBattle": 16,
+    "EffectInBattle": 117,
+    "Price": 0
+  },
+
+  //Should be 5E 81 3F 45 02 00 04 01
+  {
+    "NameTextOffset": "016E",
+    "NintenUsable": true,
+    "AnaUsable": true,
+    "LloydUsable": true,
+    "TeddyUsable": true,
+    "Unknown1": true,
+    "Unknown2": true,
+    "Edible": false,
+    "Permanent": false,
+    "EquippableStrength": 5,
+    "Type": "Ring",
+    "EffectOutsideOfBattle": 2,
+    "EffectInBattle": 0,
+    "Price": 260
+  }
+]
