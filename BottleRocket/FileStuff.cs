@@ -39,37 +39,37 @@ namespace BottleRocket
         }
         #endregion
 
-        #region Methods for Serializing and Deserializing JSON
-        public static void ExportJson(string json, string path) //multi-purpose!
+        #region Methods for Serializing and Deserializing Toml
+        public static void ExportTOML(string toml, string path) //multi-purpose!
         {
             using (var writer = new StreamWriter(path))
             {
-                writer.Write(json);
+                writer.Write(toml);
             }
             MessageBox.Show($"Finished writing {path}");
         }
 
 
-        public static Item[] LoadItemDataFromJson()
+        public static Item[] LoadItemDataFromToml()
         {
-            var jsonText = string.Empty;
-            using (var reader = new StreamReader(Item.JSON_PATH))
+            var tomlText = string.Empty;
+            using (var reader = new StreamReader(Item.TOML_PATH))
             {
-                jsonText = reader.ReadToEnd();
+                tomlText = reader.ReadToEnd();
             }
 
-            return Item.ImportJSON(jsonText);
+            return Item.ImportTOML(tomlText);
         }
 
-        public static TeleportLocation[] LoadTeleportDataFromJson()
+        public static TeleportLocation[] LoadTeleportDataFromTOML()
         {
-            var jsonText = string.Empty;
-            using (var reader = new StreamReader(TeleportLocation.JSON_PATH))
+            var tomlText = string.Empty;
+            using (var reader = new StreamReader(TeleportLocation.TOML_PATH))
             {
-                jsonText = reader.ReadToEnd();
+                tomlText = reader.ReadToEnd();
             }
 
-            return TeleportLocation.ImportJson(jsonText);
+            return TeleportLocation.ImportTOML(tomlText);
         }
         #endregion
 

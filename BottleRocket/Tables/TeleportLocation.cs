@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using Nett;
 
 namespace BottleRocket.Tables
 {
@@ -9,7 +9,7 @@ namespace BottleRocket.Tables
         public const int START_OFFSET = 0x1C10;
         public const int END_OFFSET = 0x1C50;
         public const int NUMBER_OF_ENTRIES = 8;
-        public const string JSON_PATH = @"teleport_location_table.json";
+        public const string TOML_PATH = @"teleport_location_table.toml";
 
         public string NameTextOffset; //Bytes 0 and 1       0xD383 "MyHome"
         public byte Song; //Byte 2                          0x86
@@ -101,15 +101,15 @@ namespace BottleRocket.Tables
             return result;
         }
 
-        public static void ExportJson(TeleportLocation[] locations)
+        public static void ExportTOML(TeleportLocation[] locations)
         {
-            var json = JsonConvert.SerializeObject(locations, Formatting.Indented);
-            FileStuff.ExportJson(json, JSON_PATH);
+            var toml = Toml.WriteFile(locations);
+            FileStuff.ExportTOML(toml, TOML_PATH);
         }
 
-        public static TeleportLocation[] ImportJson(string json)
+        public static TeleportLocation[] ImportTOML(string toml)
         {
-            var results = JsonConvert.DeserializeObject<List<TeleportLocation>>(json);
+            var results = Toml.ReadFile<List<Item>>(toml);
             return results.ToArray();
         }
     }

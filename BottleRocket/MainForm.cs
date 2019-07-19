@@ -54,19 +54,19 @@ namespace BottleRocket
         }
         #endregion
 
-        private void btnExportItemJSON_Click(object sender, EventArgs e)
+        private void btnExportItemTOML_Click(object sender, EventArgs e)
         {
             if (!FileStuff.ROMisLoaded()) return;
 
             var itemData = FileStuff.LoadItemDataFromROM();
-            Item.ExportJSON(itemData);
+            Item.ExportTOML(itemData);
         }
 
-        private void btnImportItemJSON_Click(object sender, EventArgs e)
+        private void btnImportItemTOML_Click(object sender, EventArgs e)
         {
             if (!FileStuff.ROMisLoaded()) return;
 
-            var itemData = FileStuff.LoadItemDataFromJson();
+            var itemData = FileStuff.LoadItemDataFromTOML();
             FileStuff.SaveToROM(itemData);
         }
 
@@ -75,14 +75,14 @@ namespace BottleRocket
             if (!FileStuff.ROMisLoaded()) return;
 
             var teleportData = FileStuff.LoadTeleportDataFromROM();
-            TeleportLocation.ExportJson(teleportData);
+            TeleportLocation.ExportTOML(teleportData);
         }
 
         private void btnImportTeleport_Click(object sender, EventArgs e)
         {
             if (!FileStuff.ROMisLoaded()) return;
 
-            var teleportData = FileStuff.LoadTeleportDataFromJson();
+            var teleportData = FileStuff.LoadTeleportDataFromTOML();
             FileStuff.SaveToROM(teleportData);
         }
     }
