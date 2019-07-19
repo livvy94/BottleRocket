@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using Nett;
 
 namespace BottleRocket.Tables
 
@@ -10,7 +10,7 @@ namespace BottleRocket.Tables
         public const int START_OFFSET = 0x1C90;
         public const int END_OFFSET = 0x1CF0;
         public const int NUMBER_OF_ENTRIES = 12;
-        public const string JSON_PATH = @"train_destination_table.json";
+        public const string TOML_PATH = @"train_destination_table.toml";
 
         public string NameTextOffset { get; set; }
         public int MusicToPlay { get; set; }
