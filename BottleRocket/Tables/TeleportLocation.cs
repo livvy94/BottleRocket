@@ -109,7 +109,7 @@ namespace BottleRocket.Tables
 
         public static TeleportLocation[] ImportTOML(string toml)
         {
-            var results = Toml.ReadFile<List<Item>>(toml);
+            var results = Toml.ReadFile<List<TeleportLocation>>(toml);
             return results.ToArray();
         }
     }
