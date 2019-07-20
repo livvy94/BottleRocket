@@ -50,7 +50,7 @@ namespace BottleRocket
         }
 
 
-        public static Item[] LoadItemDataFromToml()
+        public static Item[] LoadItemDataFromTOML()
         {
             var tomlText = string.Empty;
             using (var reader = new StreamReader(Item.TOML_PATH))
