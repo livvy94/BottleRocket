@@ -103,8 +103,7 @@ namespace BottleRocket.Tables
 
         public static void ExportTOML(TeleportLocation[] locations)
         {
-            var toml = Toml.WriteFile(locations);
-            FileStuff.ExportTOML(toml, TOML_PATH);
+            Toml.WriteFile(locations, TOML_PATH);
         }
 
         public static TeleportLocation[] ImportTOML(string toml)
