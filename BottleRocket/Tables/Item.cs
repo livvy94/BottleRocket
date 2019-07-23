@@ -139,8 +139,7 @@ Normal items are just weapons with zero strength, which makes them non-equippabl
         //https://www.newtonsoft.com/json/help/html/SerializingCollections.htm
         public static void ExportTOML(Item[] itemData)
         {
-            var toml = Toml.WriteFile(itemData);
-            FileStuff.ExportTOML(toml, TOML_PATH);
+            Toml.WriteFile(itemData, TOML_PATH);
         }
 
         public static Item[] ImportTOML(string toml)
