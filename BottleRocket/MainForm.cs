@@ -59,7 +59,7 @@ namespace BottleRocket
             if (!FileStuff.ROMisLoaded()) return;
 
             var itemData = FileStuff.LoadItemDataFromROM();
-            Item.ExportTOML(itemData);
+            Item.ExportData(itemData);
         }
 
         private void btnImportItemTOML_Click(object sender, EventArgs e)
@@ -75,7 +75,7 @@ namespace BottleRocket
             if (!FileStuff.ROMisLoaded()) return;
 
             var teleportData = FileStuff.LoadTeleportDataFromROM();
-            TeleportLocation.ExportTOML(teleportData);
+            TeleportLocation.ExportData(teleportData);
         }
 
         private void btnImportTeleport_Click(object sender, EventArgs e)
