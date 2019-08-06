@@ -101,7 +101,7 @@ namespace BottleRocket.Tables
             return result;
         }
 
-        public static void ExportTOML(TeleportLocation[] locations)
+        public static void ExportData(TeleportLocation[] locations)
         {
             Toml.WriteFile(locations, TOML_PATH);
         }

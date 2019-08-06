@@ -39,8 +39,8 @@ namespace BottleRocket
         }
         #endregion
 
-        #region Methods for Serializing and Deserializing Toml
-        public static void ExportTOML(string toml, string path) //multi-purpose!
+        #region Methods for exporting and importing data
+        public static void ExportData(string toml, string path) //multi-purpose!
         {
             using (var writer = new StreamWriter(path))
             {
@@ -50,7 +50,7 @@ namespace BottleRocket
         }
 
 
-        public static Item[] LoadItemDataFromTOML()
+        public static Item[] LoadItemDataFromConfig()
         {
             var tomlText = string.Empty;
             using (var reader = new StreamReader(Item.TOML_PATH))
