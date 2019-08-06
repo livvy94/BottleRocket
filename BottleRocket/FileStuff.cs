@@ -40,11 +40,11 @@ namespace BottleRocket
         #endregion
 
         #region Methods for exporting and importing data
-        public static void ExportData(string toml, string path) //multi-purpose!
+        public static void ExportData(string data, string path) //multi-purpose!
         {
             using (var writer = new StreamWriter(path))
             {
-                writer.Write(toml);
+                writer.Write(data);
             }
             MessageBox.Show($"Finished writing {path}");
         }
