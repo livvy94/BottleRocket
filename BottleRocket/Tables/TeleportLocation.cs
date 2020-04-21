@@ -15,16 +15,16 @@ namespace BottleRocket.Tables
         public byte Song; //Byte 2                          0x86
         public byte X; //Byte 3                             0x33
         public byte MinitileCode; //Byte 4, first half      0x4
-        public string Direction; //byte 4, 2nd half          0x6
+        public string Direction; //byte 4, 2nd half         0x6
         public byte Y; //Byte 5                             0x51
         //Bytes 6 and 7 are unused
 
         public byte[] GenerateTableEntry()
         {
-            byte[] result = new byte[8];
+            var result = new byte[8];
 
-            int textOffsetTemp = HexHelpers.HexStringToInt(NameTextOffset) + 0x7FF0;
-            string namePointerBytes = HexHelpers.Swap(textOffsetTemp.ToString("X4"));
+            var textOffsetTemp = HexHelpers.HexStringToInt(NameTextOffset) + 0x7FF0;
+            var namePointerBytes = HexHelpers.Swap(textOffsetTemp.ToString("X4"));
 
             byte direction;
             Direction = Direction.ToLower().Trim();
@@ -45,15 +45,16 @@ namespace BottleRocket.Tables
                 direction = 6;
             else if (Direction == "northwest")
                 direction = 7;
-            else throw new ArgumentException(
-                $"Invalid compass direction: {Direction}\r\n" +
-                 "Please use north, northeast, east, southeast, etc.");
+            else
+                throw new ArgumentException(
+                    $"Invalid compass direction: {Direction}\r\n" +
+                    "Please use north, northeast, east, southeast, etc.");
 
-            result[0] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(0, 2));
-            result[1] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(2, 2));
+            result[0] = (byte) HexHelpers.HexStringToInt(namePointerBytes.Substring(0, 2));
+            result[1] = (byte) HexHelpers.HexStringToInt(namePointerBytes.Substring(2, 2));
             result[2] = Song;
             result[3] = X;
-            result[4] = (byte)HexHelpers.HexStringToInt(MinitileCode.ToString("X1") + direction);
+            result[4] = (byte) HexHelpers.HexStringToInt(MinitileCode.ToString("X1") + direction);
             result[5] = Y;
             result[6] = 0x00; //Unused byte
             result[7] = 0x00; //Unused byte
@@ -93,7 +94,7 @@ namespace BottleRocket.Tables
                 NameTextOffset = (namePointerTemp - 0x7FF0).ToString("X4"),
                 Song = input[2],
                 X = input[3],
-                MinitileCode = (byte)HexHelpers.HexStringToInt(minitileTemp),
+                MinitileCode = (byte) HexHelpers.HexStringToInt(minitileTemp),
                 Direction = directionStringTemp,
                 Y = input[5]
             };

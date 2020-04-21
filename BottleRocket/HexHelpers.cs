@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BottleRocket
 {
-    class HexHelpers
+    internal class HexHelpers
     {
         public static string IntToBinaryString(int input)
         {
@@ -31,13 +31,13 @@ namespace BottleRocket
             input = HexClean(input);
             return Convert.ToInt32(input, 16);
         }
-        
+
         public static string IntToHexString(int input, bool brackets)
         {
             var result = Convert.ToString(input, 16);
             result = Pad(result);
             if (brackets) result = $"[{result}]";
-            
+
             return result;
         }
 
@@ -50,11 +50,9 @@ namespace BottleRocket
         public static byte[] HexStringToByteArray(string input)
         {
             var result = new List<byte>();
-            
+
             for (var i = 0; i < input.Length; i += 2)
-            {
                 result.Add(byte.Parse(input.Substring(i, 2), NumberStyles.HexNumber));
-            }
 
             return result.ToArray();
         }
@@ -62,14 +60,11 @@ namespace BottleRocket
         public static string ByteArrayToHexString(byte[] input, bool brackets)
         {
             var result = new StringBuilder();
-            foreach (byte b in input)
-            {
-                result.Append(b.ToString("X2"));
-            }
+            foreach (var b in input) result.Append(b.ToString("X2"));
 
             if (brackets)
                 return $"[{result}]";
-            
+
             return result.ToString();
         }
 
@@ -84,14 +79,14 @@ namespace BottleRocket
                 case 6: //AABBCC
                     return input.Substring(0, 2) + input.Substring(4, 2) + input.Substring(2, 2);
                 default:
-                    throw new System.ArgumentException("Not sure how to swap that number of bytes...");
+                    throw new ArgumentException("Not sure how to swap that number of bytes...");
             }
         }
-        
+
         public static int SwapBytes(int value, int size)
         {
-            int val = 0;
-            for (int i = 0; i < size; i++)
+            var val = 0;
+            for (var i = 0; i < size; i++)
                 val += ((value >> (size - 1 - i)) << i) & (1 << i);
             return val;
         }
@@ -104,14 +99,15 @@ namespace BottleRocket
                     Array.Reverse(input);
                     return input;
                 case 3:
-                    return new byte[]
+                    return new[]
                     {
                         input[0],
                         input[2],
                         input[1]
                     };
                 default:
-                    throw new ArgumentException($"Not sure how to swap that many bytes... ({input.Length.ToString()} of them)");
+                    throw new ArgumentException(
+                        $"Not sure how to swap that many bytes... ({input.Length.ToString()} of them)");
             }
         }
 
@@ -127,15 +123,12 @@ namespace BottleRocket
             //pad a hex string with zeroes if it's not an even number of chars
             if (input.Length % 2 != 0)
                 return "0" + input;
-            else return input;
+            return input;
         }
 
         public static string Pad(string input, int desiredLength)
         {
-            while (input.Length < desiredLength)
-            {
-                input = "0" + input;
-            }
+            while (input.Length < desiredLength) input = "0" + input;
 
             return input;
         }
@@ -143,17 +136,14 @@ namespace BottleRocket
         public static string HexClean(string input)
         {
             return input.Replace(" ", string.Empty)
-                        .Replace("[", string.Empty)
-                        .Replace("]", string.Empty);
+                .Replace("[", string.Empty)
+                .Replace("]", string.Empty);
         }
 
         public static int InterpretBoolsAsBinary(bool[] input)
         {
             var result = new StringBuilder();
-            foreach (var bit in input)
-            {
-                result.Append(bit ? '1' : '0');
-            }
+            foreach (var bit in input) result.Append(bit ? '1' : '0');
 
             return BinaryStringToInt(result.ToString());
         }

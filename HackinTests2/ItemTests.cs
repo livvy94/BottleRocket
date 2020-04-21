@@ -43,6 +43,44 @@ namespace HackinTests
             Assert.AreEqual(expectedEntry, test.GenerateTableEntry());
         }
 
+
+        [Test]
+        public void ItemToPointerTableEntry_NewTotallyRadicalExtendedOffset()
+        {
+            var expectedEntry = new byte[]
+            {
+                //the Bullhorn
+                0x6D,
+                0x83,
+                0x3F,
+                0x00,
+                0x00,
+                0x3C,
+                0x00,
+                0x00
+            };
+
+            var test = new Item
+            {
+                NameTextOffset = "037D",
+                NintenUsable = true,
+                AnaUsable = true,
+                LloydUsable = true,
+                TeddyUsable = true,
+                Unknown1 = true,
+                Unknown2 = true,
+                Edible = false,
+                Permanent = false,
+                EquippableStrength = 0,
+                Type = "Weapon",
+                EffectOutsideOfBattle = 0x00,
+                EffectInBattle = 0x3C,
+                Price = 0
+            };
+
+            Assert.AreEqual(expectedEntry, test.GenerateTableEntry());
+        }
+
         [Test]
         public void PointerTableEntryToItem()
         {
@@ -94,44 +132,6 @@ namespace HackinTests
             Assert.AreEqual(expectedItem.EffectOutsideOfBattle, test.EffectOutsideOfBattle);
             Assert.AreEqual(expectedItem.EffectInBattle, test.EffectInBattle);
             Assert.AreEqual(expectedItem.Price, test.Price);
-        }
-
-
-        [Test]
-        public void ItemToPointerTableEntry_NewTotallyRadicalExtendedOffset()
-        {
-            var expectedEntry = new byte[]
-            {
-                //the Bullhorn
-                0x6D,
-                0x83,
-                0x3F,
-                0x00,
-                0x00,
-                0x3C,
-                0x00,
-                0x00
-            };
-
-            var test = new Item
-            {
-                NameTextOffset = "037D",
-                NintenUsable = true,
-                AnaUsable = true,
-                LloydUsable = true,
-                TeddyUsable = true,
-                Unknown1 = true,
-                Unknown2 = true,
-                Edible = false,
-                Permanent = false,
-                EquippableStrength = 0,
-                Type = "Weapon",
-                EffectOutsideOfBattle = 0x00,
-                EffectInBattle = 0x3C,
-                Price = 0
-            };
-
-            Assert.AreEqual(expectedEntry, test.GenerateTableEntry());
         }
 
         [Test]

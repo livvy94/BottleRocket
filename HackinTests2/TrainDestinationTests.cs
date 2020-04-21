@@ -1,5 +1,4 @@
-﻿using System;
-using BottleRocket.Tables;
+﻿using BottleRocket.Tables;
 using NUnit.Framework;
 
 namespace HackinTests
@@ -19,7 +18,7 @@ namespace HackinTests
                 0xC5, //11000101
                 0x53, //01010011
                 0x10,
-                0x00,
+                0x00
             };
 
             var test = new TrainDestination
@@ -36,6 +35,5 @@ namespace HackinTests
 
             Assert.AreEqual(expectedEntry, result);
         }
-
     }
 }

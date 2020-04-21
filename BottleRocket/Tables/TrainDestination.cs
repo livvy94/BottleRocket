@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace BottleRocket.Tables
 
@@ -21,10 +19,10 @@ namespace BottleRocket.Tables
 
         public object GenerateTableEntry()
         {
-            byte[] result = new byte[8];
+            var result = new byte[8];
 
-            int textOffsetTemp = HexHelpers.HexStringToInt(NameTextOffset) + 0x7FF0;
-            string namePointerBytes = HexHelpers.Swap(textOffsetTemp.ToString("X4"));
+            var textOffsetTemp = HexHelpers.HexStringToInt(NameTextOffset) + 0x7FF0;
+            var namePointerBytes = HexHelpers.Swap(textOffsetTemp.ToString("X4"));
 
             //37 (decimal)
             //79 (decimal)
@@ -37,9 +35,9 @@ namespace BottleRocket.Tables
             //94 4F
 
             //TODO: OVERHAUL THESE LINES AAUGH
-            int musicBytes = HexHelpers.SwapBytes(MusicToPlay, 5);
-            int trainStartLocationXBytes = HexHelpers.SwapBytes(TrainStartLocationX, 11);
-            string bytesTwoAndThree = HexHelpers.IntToHexString(((musicBytes << 11) + trainStartLocationXBytes), false);
+            var musicBytes = HexHelpers.SwapBytes(MusicToPlay, 5);
+            var trainStartLocationXBytes = HexHelpers.SwapBytes(TrainStartLocationX, 11);
+            var bytesTwoAndThree = HexHelpers.IntToHexString((musicBytes << 11) + trainStartLocationXBytes, false);
 
             byte direction; //TODO: Make sure these values are correct. If so, make into a class?
             if (StartDirection == "north" || StartDirection == "up")
@@ -58,9 +56,10 @@ namespace BottleRocket.Tables
                 direction = 6;
             else if (StartDirection == "northwest")
                 direction = 7;
-            else throw new ArgumentException(
-                $"Invalid compass direction: {StartDirection}\r\n" +
-                "Please use north, northeast, east, southeast, etc.");
+            else
+                throw new ArgumentException(
+                    $"Invalid compass direction: {StartDirection}\r\n" +
+                    "Please use north, northeast, east, southeast, etc.");
 
             //[C5][53]
             //to
@@ -70,18 +69,18 @@ namespace BottleRocket.Tables
             //to
             //3 1621
 
-            int directionBytes = HexHelpers.SwapBytes(direction, 5);
-            int trainStartLocationYBytes = HexHelpers.SwapBytes(TrainStartLocationY, 11);
-            string bytesFourAndFive = HexHelpers.IntToHexString(((directionBytes << 11) + trainStartLocationYBytes), false);
+            var directionBytes = HexHelpers.SwapBytes(direction, 5);
+            var trainStartLocationYBytes = HexHelpers.SwapBytes(TrainStartLocationY, 11);
+            var bytesFourAndFive = HexHelpers.IntToHexString((directionBytes << 11) + trainStartLocationYBytes, false);
 
-            byte[] priceBytes = HexHelpers.HexStringToByteArray(HexHelpers.Swap(Price.ToString("X4")));
+            var priceBytes = HexHelpers.HexStringToByteArray(HexHelpers.Swap(Price.ToString("X4")));
 
-            result[0] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(0, 2));
-            result[1] = (byte)HexHelpers.HexStringToInt(namePointerBytes.Substring(2, 2));
-            result[2] = (byte)HexHelpers.HexStringToInt(bytesTwoAndThree.Substring(0, 2));
-            result[3] = (byte)HexHelpers.HexStringToInt(bytesTwoAndThree.Substring(2, 2));
-            result[4] = (byte)HexHelpers.HexStringToInt(bytesFourAndFive.Substring(0, 2));
-            result[5] = (byte)HexHelpers.HexStringToInt(bytesFourAndFive.Substring(2, 2));
+            result[0] = (byte) HexHelpers.HexStringToInt(namePointerBytes.Substring(0, 2));
+            result[1] = (byte) HexHelpers.HexStringToInt(namePointerBytes.Substring(2, 2));
+            result[2] = (byte) HexHelpers.HexStringToInt(bytesTwoAndThree.Substring(0, 2));
+            result[3] = (byte) HexHelpers.HexStringToInt(bytesTwoAndThree.Substring(2, 2));
+            result[4] = (byte) HexHelpers.HexStringToInt(bytesFourAndFive.Substring(0, 2));
+            result[5] = (byte) HexHelpers.HexStringToInt(bytesFourAndFive.Substring(2, 2));
             result[6] = priceBytes[0];
             result[7] = priceBytes[1];
             return result;

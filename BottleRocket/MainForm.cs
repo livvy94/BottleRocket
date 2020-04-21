@@ -1,7 +1,7 @@
-﻿using System;
+﻿using BottleRocket.Tables;
+using System;
 using System.IO;
 using System.Windows.Forms;
-using BottleRocket.Tables;
 
 namespace BottleRocket
 {

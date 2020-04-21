@@ -5,13 +5,23 @@ using BottleRocket.Tables;
 
 namespace BottleRocket
 {
-    class FileStuff
+    internal class FileStuff
     {
         private const string FINISHED = @"Finished inserting data! Refresh your hex editor!";
 
+        private static bool WrongNumberOfEntries(int expectedNumber, int number)
+        {
+            if (expectedNumber == number) return false;
+            MessageBox.Show(
+                $"ERROR: Wrong number of items!\r\n(Should be {expectedNumber}, but instead it's {number}.)");
+            return true;
+        }
+
 
         #region Methods for loading a ROM
+
         public static string ROMpath = string.Empty;
+
         public static bool RomIsGood(string filepath)
         {
             ROMpath = filepath;
@@ -37,15 +47,18 @@ namespace BottleRocket
             if (!status) MessageBox.Show(@"Please open a ROM!");
             return status;
         }
+
         #endregion
 
         #region Methods for Serializing and Deserializing JSON
+
         public static void ExportJson(string json, string path) //multi-purpose!
         {
             using (var writer = new StreamWriter(path))
             {
                 writer.Write(json);
             }
+
             MessageBox.Show($"Finished writing {path}");
         }
 
@@ -71,9 +84,11 @@ namespace BottleRocket
 
             return TeleportLocation.ImportJson(jsonText);
         }
+
         #endregion
 
         #region Methods for reading from the ROM
+
         public static Item[] LoadItemDataFromROM()
         {
             //Read the item configuration table in the ROM, and parse what it finds into Item objects
@@ -109,20 +124,19 @@ namespace BottleRocket
 
             return teleportTableContents.ToArray();
         }
+
         #endregion
 
         #region Methods for writing to the ROM
 
-        public static void SaveToROM(Item[] items) //eventually, there will be other overloaded versions of SaveToROM for other data
+        public static void
+            SaveToROM(Item[] items) //eventually, there will be other overloaded versions of SaveToROM for other data
         {
             if (WrongNumberOfEntries(Item.NUMBER_OF_ENTRIES, items.Length)) return;
 
             //Generate a pointer table from a list of Item objects, and save it to the ROM
             var pointerTable = new List<byte>();
-            foreach (var item in items)
-            {
-                pointerTable.AddRange(item.GenerateTableEntry());
-            }
+            foreach (var item in items) pointerTable.AddRange(item.GenerateTableEntry());
 
             WriteToROM(pointerTable, Item.START_OFFSET);
         }
@@ -132,10 +146,7 @@ namespace BottleRocket
             if (WrongNumberOfEntries(TeleportLocation.NUMBER_OF_ENTRIES, teleportLocations.Length)) return;
 
             var teleportTable = new List<byte>();
-            foreach (var location in teleportLocations)
-            {
-                teleportTable.AddRange(location.GenerateTableEntry());
-            }
+            foreach (var location in teleportLocations) teleportTable.AddRange(location.GenerateTableEntry());
 
             WriteToROM(teleportTable, TeleportLocation.START_OFFSET);
         }
@@ -156,13 +167,5 @@ namespace BottleRocket
         }
 
         #endregion
-
-        private static bool WrongNumberOfEntries(int expectedNumber, int number)
-        {
-            if (expectedNumber == number) return false;
-            MessageBox.Show($"ERROR: Wrong number of items!\r\n(Should be {expectedNumber}, but instead it's {number}.)");
-            return true;
-
-        }
     }
 }
