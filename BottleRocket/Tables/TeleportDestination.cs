@@ -2,7 +2,7 @@
 
 namespace BottleRocket.Tables
 {
-    public class TrainDestination
+    public class TeleportDestination
     {
     }
 }
